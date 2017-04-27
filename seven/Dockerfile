@@ -21,11 +21,13 @@ RUN pip install -r requirements.txt
 RUN npm install minimatch@3.0.2
 RUN echo '{ "allow_root": true }' > /root/.bowerrc
 
-RUN make
+RUN pip install virtualenv && virtualenv ve && . ve/bin/activate && make build
+
+ADD Specify_unix_64.sh /opt
 
 VOLUME /code
 EXPOSE 8000
 
 #RUN sed -i "s/127\.0\.0\.1/0\.0\.0\.0/g" specifyweb/settings/__init__.py
 
-CMD ["python", "specifyweb/manage.py", "runserver", "0.0.0.0:8000"]
+CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
