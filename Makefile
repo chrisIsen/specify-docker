@@ -62,6 +62,14 @@ get-s6-login:
 		sh -c "mysql --silent -u root -p$(MYSQL_ROOT_PASSWORD) -D$(MYSQL_DATABASE) \
 		-e 'select name, password from specifyuser where SpecifyUserID = 1;'"
 
+s7-notifications:
+	@echo "Running Specify 7 django migrations to support Notifications"
+	@docker cp $(PWD)/s7init.sql specifydocker_db_1:/tmp/s7init.sql
+	@docker exec -it specifydocker_db_1 \
+		bash -c "mysql --silent -u root -p$(MYSQL_ROOT_PASSWORD) -D$(MYSQL_DATABASE) < /tmp/s7init.sql"
+
+	@docker exec -it specifydocker_as_1 \
+		bash -c ". ve/bin/activate && make django_migrations"
 
 clean:
 	#rm -f Specify_unix_64.sh
