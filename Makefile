@@ -1,21 +1,12 @@
 #!make
 include .env
 PWD := $(shell pwd)
-NAME := dina/specify-desktop:v6.6.05
 XSOCK := /tmp/.X11-unix/X0
-#SRC_DATA :=  http://archive.org/download/dw-collectionsdata/dina_web.sql.gz
-SRC_DATA := https://github.com/DINA-Web/datasets/blob/master/specify/DemoDatawImages.sql.gz?raw=true
-SRC_IMAGES := https://github.com/DINA-Web/datasets/blob/master/specify/AttachmentStorage.zip?raw=true
-SRC_SW := http://update.specifysoftware.org/Specify_unix_64.sh
 
 all: clean init build up
 .PHONY: all
 
 init:
-	@echo "Caching downloads locally..."
-	@test -f Specify_unix_64.sh || \
-		(wget $(SRC_SW) && chmod +x Specify_unix_64.sh)
-
 	@test -f data.sql || \
 		(curl --progress-bar -L $(SRC_DATA) -o data.sql.gz && \
 		gunzip data.sql.gz)
@@ -32,29 +23,33 @@ init:
 		cp user.properties.init user.properties
 
 build:
-	@docker build --tag $(NAME) .
+	cd six && make build
+	cd seven && make build
+	cd web-asset-server && make build
+	cd report-server && make build
 
 debug-ui:
+	docker-compose up -d ui
 	xhost +local:
 	docker exec -it \
-		specifydesktopdocker_ui_1 bash
+		specifydocker_ui_1 bash
 
 up:
 	@echo "Launching services"
 	docker-compose up -d 
 
 get-db-shell:
-	@docker exec -it specifydesktopdocker_db_1 \
+	@docker exec -it specifydocker_db_1 \
 		sh -c "mysql -u root -p$(MYSQL_ROOT_PASSWORD) -D$(MYSQL_DATABASE)"
 
 get-ui-shell:
-	@docker exec -it specifydesktopdocker_ui_1 \
+	@docker exec -it specifydocker_ui_1 \
 		bash
 
 get-s6-login:
 	@echo "Getting Specify 6 username from db... did you export the .env?"
 	#@export $(cat .env | xargs) > /dev/null
-	@docker exec -i specifydesktopdocker_db_1 \
+	@docker exec -it specifydocker_db_1 \
 		sh -c "mysql --silent -u root -p$(MYSQL_ROOT_PASSWORD) -D$(MYSQL_DATABASE) \
 		-e 'select name, password from specifyuser where SpecifyUserID = 1;'"
 
@@ -64,5 +59,6 @@ clean:
 	docker-compose stop
 	docker-compose rm -vf
 
-release:
-	docker push $(NAME)
+down:
+	docker-compose down
+
