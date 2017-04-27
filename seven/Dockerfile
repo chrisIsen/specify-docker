@@ -16,6 +16,11 @@ ADD ./specify7 /code/
 WORKDIR /code
 
 RUN pip install -r requirements.txt
+
+# attempt to fix some complainst from frontend JS dependencies installs
+RUN npm install minimatch@3.0.2
+RUN echo '{ "allow_root": true }' > /root/.bowerrc
+
 RUN make
 
 VOLUME /code
