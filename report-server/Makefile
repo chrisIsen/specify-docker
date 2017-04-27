@@ -18,11 +18,11 @@ build: init
 
 up:
 	docker run --rm --name report -it \
-		-p 8080:8080 -v $(PWD)/m2:/root/.m2 \
+		-p 8484:8080 -v $(PWD)/m2:/root/.m2 \
 		dina/reportserver:latest
 
 test:
-	firefox http://localhost:8080/ & 
+	firefox http://localhost:8484/ & 
 
 clean:
 	docker stop report
