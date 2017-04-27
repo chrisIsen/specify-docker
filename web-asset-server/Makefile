@@ -30,9 +30,9 @@ cfg:
 	@echo "USE_GLOBAL_PREFS=true"
 	@echo "attachment.url=http\://media\:8080/web_asset_store.xml"
 	@echo "attachment.use_path=false"
-    @echo "attachment.path="
+	@echo "attachment.path="
 	@echo "attachment.key=test_attachment_key"
-    @echo "# OR IF YOU CHANGED THE DEFAULT, USE THIS KEY:"
+	@echo "# OR IF YOU CHANGED THE DEFAULT, USE THIS KEY:"
 	@cat settings.py | grep "KEY ="
 
 clean:
