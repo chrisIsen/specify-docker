@@ -10,7 +10,7 @@ all: clean init build
 init:
 	@echo "Caching downloads locally..."
 	@test -f Specify_unix_64.sh || \
-		(wget $(SRC_SW) && chmod +x $(SRC_SW))
+		(wget $(SRC_SW) && chmod +x Specify_unix_64.sh)
 
 	@test -f wait-for-it.sh || \
 		(wget https://raw.githubusercontent.com/vishnubob/wait-for-it/master/wait-for-it.sh && \
