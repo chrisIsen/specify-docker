@@ -2,6 +2,8 @@
 
 This repo contains materials to build a system with Specify 6 and 7 using Docker. The system includes a media server and a report server.
 
+![Screenshot](screenshot.png)
+
 ## Dependencies
 
 The dependencies are:
