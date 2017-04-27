@@ -2,11 +2,20 @@
 include .env
 PWD := $(shell pwd)
 XSOCK := /tmp/.X11-unix/X0
+SRC_DATA := https://github.com/DINA-Web/datasets/blob/master/specify/DemoDatawImages.sql.gz?raw=true
+SRC_IMAGES := https://github.com/DINA-Web/datasets/blob/master/specify/AttachmentStorage.zip?raw=true
+SRC_SW := http://update.specifysoftware.org/Specify_unix_64.sh
 
 all: clean init build up
 .PHONY: all
 
 init:
+	@echo "Caching downloads locally..."
+	@test -f Specify_unix_64.sh || \
+		(wget $(SRC_SW) && chmod +x Specify_unix_64.sh) && \
+		cp Specify_unix_64.sh six && cp Specify_unix_64.sh seven
+
+
 	@test -f data.sql || \
 		(curl --progress-bar -L $(SRC_DATA) -o data.sql.gz && \
 		gunzip data.sql.gz)
@@ -23,8 +32,8 @@ init:
 		cp user.properties.init user.properties
 
 build:
-	cd six && make build
-	cd seven && make build
+	cd six && make init && make build
+	cd seven && make init && make build
 	cd web-asset-server && make build
 	cd report-server && make build
 
