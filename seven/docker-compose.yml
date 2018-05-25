@@ -18,12 +18,12 @@ services:
       - 3306:3306
 
   ui:
-    image: dina/specify:6
+    image: bioatlas/specify-desktop:v6.6.06
     volumes:
       - ./srv/s6:/tmp
 
   as:
-    image: dina/specify-server:v7
+    image: bioatlas/specify-server:v7
     volumes_from:
       - fs
     links:

@@ -19,7 +19,7 @@ init:
 		https://github.com/specify/specify7
 
 build:
-	docker build -t dina/specify-server:v7 .
+	docker build -t bioatlas/specify-server:v7 .
 
 up:
 	docker-compose up -d
@@ -40,7 +40,7 @@ get-specify-login:
 		-e 'select name, password from specifyuser where SpecifyUserID = 1;'"
 
 debug:
-	docker run --rm -it dina/specify-server:v7 bash
+	docker run --rm -it bioatlas/specify-server:v7 bash
 
 config:
 	docker cp dina/specify-server:v7:specifyweb/settings/specify_settings.py .

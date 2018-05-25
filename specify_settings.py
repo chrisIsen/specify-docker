@@ -18,7 +18,7 @@ MASTER_PASSWORD = 'ben'
 SCHEMA_LANGUAGE = 'en'
 
 # The Specify web attachement server URL.
-WEB_ATTACHMENT_URL = "http://media:8080/web_asset_store.xml"
+WEB_ATTACHMENT_URL = "https://media.bioatlas.se/web_asset_store.xml"
 
 # The Specify web attachment server key.
 WEB_ATTACHMENT_KEY = 'test_attachment_key'
@@ -30,8 +30,8 @@ WEB_ATTACHMENT_COLLECTION = None
 WEB_ATTACHMENT_REQUIRES_KEY_FOR_GET = False
 
 # Report runner service
-REPORT_RUNNER_HOST = 'report'
-REPORT_RUNNER_PORT = '8080'
+REPORT_RUNNER_HOST = 'https://report.bioatlas.se'
+REPORT_RUNNER_PORT = '443'
 
 # Workbench uploader log directory.
 # Must exist and be writeable by the web server process.
@@ -49,3 +49,8 @@ ALLOW_SUPPORT_LOGIN = False
 SUPPORT_LOGIN_TTL = 300
 
 STATS_URL = "https://stats.specifycloud.org/capture"
+
+WB_UPLOAD_LOG_DIR = "/tmp/"
+DEPOSITORY_DIR = '/tmp/'
+NOTIFICATION_TTL_DAYS = 7
+
