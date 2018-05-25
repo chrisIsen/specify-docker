@@ -1,11 +1,34 @@
-version: '2'
+version: '3'
+
+volumes:
+  data_ui:
+  data_attachments:
+  data_webassets:
 
 services:
 
-  fs:
-    image: tianon/true
-    volumes:      
-      - /tmp/.X11-unix/X0:/tmp/.X11-unix/X0
+  dnsmasq:
+    image: andyshinn/dnsmasq:2.76
+    command: --log-facility=-
+    cap_add:
+       - NET_ADMIN
+    ports:
+      - 172.17.0.1:53:53/tcp
+      - 172.17.0.1:53:53/udp
+    links:
+      - proxy:specify6.bioatlas.se
+      - proxy:specify7.bioatlas.se
+      - proxy:reports.bioatlas.se
+      - proxy:media.bioatlas.se
+
+  proxy:
+    image: jwilder/nginx-proxy:alpine
+    ports:
+      - 80:80
+      - 443:443
+    volumes:
+      - /var/run/docker.sock:/tmp/docker.sock:ro
+      - ./certs:/etc/nginx/certs
   
   db:
     image: mysql:5.7
@@ -14,83 +37,65 @@ services:
       - ./s6init.sql:/docker-entrypoint-initdb.d/s6init.sql
       - ./data.sql:/tmp/data.sql
       - ./create_schema.sh:/docker-entrypoint-initdb.d/create_schema.sh
-    ports:
-      - 3306:3306
 
   media:
-    image: dina/assetserver:latest
-    volumes:
-      - ./AttachmentStorage:/root/Specify/AttachmentStorage
-    ports:
-      - 8080:8080
+    image: bioatlas/assetserver:latest
     environment:
-      - DNSDOCK_ALIAS=media
-
-  ui:
-    image: dina/specify-desktop:v6.6.05
-    command: Specify
-    environment:
-      - DISPLAY=$DISPLAY
-    volumes_from:
-      - fs
+      - VIRTUAL_HOST=media.bioatlas.se
+      - VIRTUAL_PORT=8080
     volumes:
-      - ./user.properties:/root/Specify/user.properties
       - ./AttachmentStorage:/root/Specify/AttachmentStorage
 
   report:
-    image: dina/reportserver:latest
-    volumes_from:
-      - ui
+    image: bioatlas/reportserver:latest
+    environment:
+      - VIRTUAL_HOST=reports.bioatlas.se
+      - VIRTUAL_PORT=8080
     volumes:
+      - data_ui:/opt/Specify
       - ./report-server/m2:/root/.m2
 
-  as:
-    image: dina/specify-server:v7
-    volumes_from:
-      - ui
+  ui:
+    image: bioatlas/specify-desktop:v6.7.01
     volumes:
+      - data_ui:/opt/Specify
+      - ./user.properties:/root/Specify/user.properties
+      - ./AttachmentStorage:/root/Specify/AttachmentStorage
+    depends_on:
+      - db
+      - report
+      - media
+
+  as:
+    image: bioatlas/specify-server:v7
+    volumes:
+      - data_ui:/opt/Specify
+      - data_webassets:/code/specifyweb/frontend
       - ./specify_settings.py:/code/specifyweb/settings/specify_settings.py
     depends_on:
       - db
+      - report
+      - media
 
-  ws:
-    # this is "routing" all web traffic and knows
-    # all other services in the SDN by their 
-    # docker-compose names which are used in app.conf
+  wssix:
     image: nginx:alpine
-    volumes_from:
+    volumes:
+      - data_ui:/opt/Specify
+      - data_webassets:/code/specifyweb/frontend
+      - ./six.conf:/etc/nginx/conf.d/default.conf
+    environment:
+      - VIRTUAL_HOST=specify6.bioatlas.se
+    depends_on:
       - ui
+
+  wsseven:
+    image: nginx:alpine
+    volumes:
+      - data_ui:/opt/Specify
+      - data_webassets:/code/specifyweb/frontend
+      - ./seven.conf:/etc/nginx/conf.d/default.conf
+    environment:
+      - VIRTUAL_HOST=specify7.bioatlas.se
+    depends_on:
       - as
-    volumes:
-      - ./app.conf:/etc/nginx/conf.d/default.conf
-    environment:
-      - VIRTUAL_HOST=specify
-
-  proxy:
-    # this receives outside http/https traffic and
-    # routes it to services in the SDN, it also
-    # sets up SSL and offer the only open ports to
-    # the outside - 80 and 443, we configure it
-    # with a dnddock alias to allow testing it easily from the
-    # host machine running these docker services
-    image: jwilder/nginx-proxy
-    environment:
-      - DNSDOCK_ALIAS=specify
-    ports:
-      - "80:80"
-      - "443:443"
-    volumes:
-      - /var/run/docker.sock:/tmp/docker.sock:ro
-
-  dnsdock:
-    # for this to work, the host machine needs /etc/resolvconf configs
-    # see instructions at https://github.com/mskyttner/dns-test-docker
-    # the aacebedo image is an update of tonistiigi/dnsdock:amd64-1.13.1
-    # which has Dockerfile and docs available at Docker Hub
-    # (note the static ip on the docker bridge)
-    image: aacebedo/dnsdock:v1.15.0-amd64
-    ports:
-     - 172.17.0.1:53:53/udp
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
 

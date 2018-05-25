@@ -1,6 +1,6 @@
 #!make
 PWD := $(shell pwd)
-NAME := dina/specify-desktop:v6.6.05
+NAME := bioatlas/specify-desktop:v6.7.01
 XSOCK := /tmp/.X11-unix/X0
 SRC_SW := http://update.specifysoftware.org/Specify_unix_64.sh
 
@@ -16,7 +16,12 @@ init:
 		(wget https://raw.githubusercontent.com/vishnubob/wait-for-it/master/wait-for-it.sh && \
 		chmod +x wait-for-it.sh)
 
+	@test -d novnc || \
+		git clone --depth=1 https://github.com/kanaka/noVNC.git novnc && \
+		cd novnc && cp vnc.html index.html
+
 build:
+#	@docker -e DISPLAY=$DISPLAY -v $XSOCK:/tmp/.X11-unix -build --tag $(NAME) .
 	@docker build --tag $(NAME) .
 
 debug-ui:
