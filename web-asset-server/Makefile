@@ -10,17 +10,17 @@ init:
 		unzip AttachmentStorage.zip && rm AttachmentStorage.zip)
 
 build: init
-	docker build --tag dina/assetserver:latest .
+	docker build --tag bioatlas/assetserver:latest .
 
 debug:
 	docker run --rm -it --env-file=.env \
 		-p 8080:8080 -v $(PWD)/AttachmentStorage:/home/specify/attachments \
-		dina/assetserver:latest sh
+		bioatlas/assetserver:latest sh
 
 up:
 	docker run --name media -d --env-file=.env \
 		-p 8080:8080 -v $(PWD)/AttachmentStorage:/home/specify/attachments \
-		dina/assetserver:latest
+		bioatlas/assetserver:latest
 
 test:
 	firefox http://localhost:8080/web_asset_store.xml & 
