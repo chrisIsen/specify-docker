@@ -9,7 +9,7 @@ WORKDIR /usr/src/app
 # add a font extension jar to src/main/webapp/WEB-INF/lib/
 # COPY fonts.jar src/main/webapp/WEB-INF/lib/
 
-RUN cp /usr/share/maven/ref/settings-docker.xml /root/.m2/settings.xml \
+RUN mkdir -p /root/.m2 && cp /usr/share/maven/ref/settings-docker.xml /root/.m2/settings.xml \
 	&& git clone https://github.com/barbecue-sf/barbecue.git \
 	&& cd barbecue/barbecue \
 	&& mvn compile \
@@ -19,5 +19,7 @@ RUN cp /usr/share/maven/ref/settings-docker.xml /root/.m2/settings.xml \
 	&& cd ../.. && mvn compile
 
 #VOLUME /root/.m2
+
+EXPOSE 8080
 
 CMD ["mvn", "jetty:run", "-Djetty.host=0.0.0.0"]
