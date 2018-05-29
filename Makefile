@@ -81,11 +81,11 @@ down:
 ssl-certs:
 	@echo "Generating SSL certs using https://hub.docker.com/r/paulczar/omgwtfssl/"
 	docker run -v /tmp/certs:/certs \
-		-e SSL_SUBJECT=bioatlas.se \
-		-e SSL_DNS=specify6.bioatlas.se,specify7.bioatlas.se,reports.bioatlas.se,media.bioatlas.se \
+		-e SSL_SUBJECT=infrabas.se \
+		-e SSL_DNS=specify6.infrabas.se,specify7.infrabas.se,reports.infrabas.se,media.infrabas.se \
 	paulczar/omgwtfssl
-	cp /tmp/certs/cert.pem certs/bioatlas.se.crt
-	cp /tmp/certs/key.pem certs/bioatlas.se.key
+	cp /tmp/certs/cert.pem certs/infrabas.se.crt
+	cp /tmp/certs/key.pem certs/infrabas.se.key
 
 	@echo "Using self-signed certificates will require either the CA cert to be imported system-wide or into apps"
 	@echo "if you don't do this, apps will fail to request data using SSL (https)"
@@ -93,12 +93,12 @@ ssl-certs:
 	@echo "WARNING! For curl to work, you need to provide '--cacert /tmp/certs/ca.pem' switch or SSL requests will fail."
 
 ssl-certs-clean:
-	rm -f certs/bioatlas.se.crt certs/bioatlas.se.key
+	rm -f certs/infrabas.se.crt certs/infrabas.se.key
 	rm -f /tmp/certs
 
 ssl-certs-show:
 	#openssl x509 -in certs/dina-web.net.crt -text
-	openssl x509 -noout -text -in certs/bioatlas.se.crt
+	openssl x509 -noout -text -in certs/infrabas.se.crt
 
 backup:
 	mkdir -p backups
