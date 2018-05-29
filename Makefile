@@ -48,26 +48,26 @@ up:
 	docker-compose up -d 
 
 get-db-shell:
-	@docker exec -it specifydocker_db_1 \
+	@docker exec -it specify-docker_db_1 \
 		sh -c "mysql -u root -p$(MYSQL_ROOT_PASSWORD) -D$(MYSQL_DATABASE)"
 
 get-s6-login:
 	@echo "Getting Specify 6 username from db... did you export the .env?"
 	#@export $(cat .env | xargs) > /dev/null
-	@docker exec -it specifydocker_db_1 \
+	@docker exec -it specify-docker_db_1 \
 		sh -c "mysql --silent -u root -p$(MYSQL_ROOT_PASSWORD) -D$(MYSQL_DATABASE) \
 		-e 'select name, password from specifyuser where SpecifyUserID = 1;'"
 
 s7-notifications:
 	@echo "Running Specify 7 django migrations to support Notifications"
-	@docker cp $(PWD)/s7init.sql specifydocker_db_1:/tmp/s7init.sql
-	@docker exec -it specifydocker_db_1 \
+	@docker cp $(PWD)/s7init.sql specify-docker_db_1:/tmp/s7init.sql
+	@docker exec -it specify-docker_db_1 \
 		bash -c "mysql --silent -u root -p$(MYSQL_ROOT_PASSWORD) -D$(MYSQL_DATABASE) < /tmp/s7init.sql"
 
-	@docker exec -it specifydocker_as_1 \
+	@docker exec -it specify-docker_as_1 \
 		bash -c ". ve/bin/activate && make django_migrations"
 
-	@docker exec -it specifydocker_as_1 \
+	@docker exec -it specify-docker_as_1 \
 		bash -c ". ve/bin/activate && python manage.py migrate"
 
 clean:
@@ -102,27 +102,27 @@ ssl-certs-show:
 
 backup:
 	mkdir -p backups
-	docker run --rm --volumes-from specifydocker_media_1 \
+	docker run --rm --volumes-from specify-docker_media_1 \
 		-v $(PWD)/backups:/tmp alpine \
 		sh -c "tar czf /tmp/specify-files-$(NOW).tgz -C /root/Specify/AttachmentStorage ./"
 
-	docker exec specifydocker_db_1 bash -c \
+	docker exec specify-docker_db_1 bash -c \
 		"mysqldump -u $(MYSQL_USER) -p'$(MYSQL_PASSWORD)' -h 127.0.0.1 $(MYSQL_DATABASE)" | gzip > backups/specify-db-$(NOW).sql.gz
 
 	cp backups/specify-files-$(NOW).tgz specify-files-latest.tgz
 	cp backups/specify-db-$(NOW).sql.gz specify-db-latest.sql.gz
 
 restore:
-	docker run --rm --volumes-from specifydocker_media_1 \
+	docker run --rm --volumes-from specify-docker_media_1 \
 		-v $(PWD):/tmp alpine \
 		sh -c "cd /root/Specify/AttachmentStorage && tar xvf /tmp/specify-files-latest.tgz"
 
-	gunzip -c specify-db-latest.sql.gz | docker exec -i specifydocker_db_1 \
+	gunzip -c specify-db-latest.sql.gz | docker exec -i specify-docker_db_1 \
 		mysql -u $(MYSQL_USER) -p'$(MYSQL_PASSWORD)' -h 127.0.0.1 $(MYSQL_DATABASE)
 
 restore-otherbackup:
-	cat s6init_gnm.sql | docker exec -i specifydocker_db_1 mysql -u root -p'$(MYSQL_ROOT_PASSWORD)' -h 127.0.0.1
-	gunzip -c specify-db-latest.sql.gz | docker exec -i specifydocker_db_1 mysql -u root -p'$(MYSQL_ROOT_PASSWORD)' -h 127.0.0.1
+	cat s6init_gnm.sql | docker exec -i specify-docker_db_1 mysql -u root -p'$(MYSQL_ROOT_PASSWORD)' -h 127.0.0.1
+	gunzip -c specify-db-latest.sql.gz | docker exec -i specify-docker_db_1 mysql -u root -p'$(MYSQL_ROOT_PASSWORD)' -h 127.0.0.1
 
 
 

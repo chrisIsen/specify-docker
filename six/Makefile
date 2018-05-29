@@ -27,10 +27,10 @@ build:
 debug-ui:
 	xhost +local:
 	docker exec -it \
-		specifydesktopdocker_ui_1 bash
+		specifydesktop-docker_ui_1 bash
 
 get-ui-shell:
-	@docker exec -it specifydesktopdocker_ui_1 \
+	@docker exec -it specifydesktop-docker_ui_1 \
 		bash
 
 clean:
