@@ -4,7 +4,7 @@ ENV PYTHONUNBUFFERED 1
 
 RUN apt-get -y update && apt-get install -y \
 	curl \
-	libmysqlclient-dev \
+	default-libmysqlclient-dev \
 	build-essential
 
 RUN curl -sL https://deb.nodesource.com/setup_4.x | bash -
