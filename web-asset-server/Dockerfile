@@ -7,5 +7,5 @@ ADD server.py /
 ADD views /views/
 RUN pip install bottle
 RUN pip install -r requirements.txt
-EXPOSE 8080
+EXPOSE 80
 CMD ["python", "server.py"]

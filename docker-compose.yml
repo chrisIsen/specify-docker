@@ -42,7 +42,7 @@ services:
     image: bioatlas/assetserver:latest
     environment:
       - VIRTUAL_HOST=media.infrabas.se
-      - VIRTUAL_PORT=8080
+      - VIRTUAL_PORT=80
     volumes:
       - ./AttachmentStorage:/root/Specify/AttachmentStorage
 

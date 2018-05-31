@@ -28,8 +28,8 @@ ALLOW_STATIC_FILE_ACCESS = True
 
 # These values are interpolated into the web_asset_store.xml resource
 # so the client knows how to talk to the server.
-HOST = 'media'
-PORT = 8080
+HOST = 'media.infrabas.se'
+PORT = 80
 
 # Port the development test server should listen on.
 DEVELOPMENT_PORT = PORT
