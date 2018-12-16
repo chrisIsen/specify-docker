@@ -1,6 +1,6 @@
 # Dockerized Specify
 
-[![AGPLv3 License](http://img.shields.io/badge/license-AGPLv3-blue.svg)](https://github.com/bioatlas/specify-docker/blob/master/LICENSE)
+[![AGPLv3 License](http://img.shields.io/badge/license-AGPLv3-blue.svg)](https://github.com/recraft-ou/specify-docker/blob/master/LICENSE)
 
 This repo contains materials to build a system with Specify 6 and 7 using Docker. The system allows running Specify 6 and Specify 7 in parallell with both being accessed through a web browser. Example scenarios where this project could be useful:
 
@@ -20,7 +20,7 @@ Having a local Java install is optional because Specify 6 has been webified usin
 
 The services are secured with [SSL](https://en.wikipedia.org/wiki/Secure_Sockets_Layer) which means a digital certificate is needed - preferrably a [wildcard certificate](https://en.wikipedia.org/wiki/Wildcard_certificate). 
 
-If you are using SSL certs that you have acquired commercially and those are signed by a CA, put your files, ie `wildcardcert.crt` (here we use `bioatlas.se.crt`) and `wildcardcert.key` (here we use `bioatlas.se.key`) in the 'certs' -directory.
+If you are using SSL certs that you have acquired commercially and those are signed by a CA, put your files, ie `wildcardcert.crt` (here we use `recraft.me.crt`) and `wildcardcert.key` (here we use `recraft.me.key`) in the 'certs' -directory.
 
 You can also choose to use a free self-signed digital certificate. For setting up SSL using a self-signed digital certificate, see Usage section below.
 
@@ -44,10 +44,10 @@ The `docker-compose.yml` file defines the various components of the system. Firs
 
 On success, services will be available at:
 
-		https://specify7.bioatlas.se
-		https://specify6.bioatlas.se
-		https://media.bioatlas.se
-		https://reports.bioatlas.se
+		https://specify7.recraft.me
+		https://specify6.recraft.me
+		https://media.recraft.me
+		https://reports.recraft.me
 
 If running for the first time, the database will be loaded with data from the data.sql file (which the Makefile init target automatically downloads from SRC_DATA which is a demo dataset from Kansas available from GitHub, see the Makefile for details).
 
@@ -55,7 +55,7 @@ The db dump takes a while to load, so some patience is needed. The initial start
 
 ## Certificates and setting up SSL
 
-If you are using SSL certs that you have acquired commercially and those are signed by a CA, put your files, ie shared.crt (bioatlas.se.crt) and shared.key (bioatlas.se.key) in the 'certs' -directory.
+If you are using SSL certs that you have acquired commercially and those are signed by a CA, put your files, ie shared.crt (recraft.me.crt) and shared.key (recraft.me.key) in the 'certs' -directory.
 
 You can also generate self-signed certs. Detailed steps:
 
@@ -110,7 +110,7 @@ Before the first login to Specify 7, first make sure the Specify 6 has updated t
 
 Then run "make s7-notifications" which adds a table to the database schema which is needed specifically by Specify 7 (but not by Specify 6).
 
-Finally - after those steps - use the credentials above to login at <https://specify7.bioatlas.se> (normally `demouser/demouser`)
+Finally - after those steps - use the credentials above to login at <https://specify7.recraft.me> (normally `demouser/demouser`)
 
 ## Settings files for Specify 6 and Specify 7
 
@@ -123,7 +123,7 @@ The `user.properties` needs to be updated with minimal settings that can be used
 It seems like these entries should be valid, as default settings provided in the `user.properties` file in this repo:
 
 		USE_GLOBAL_PREFS=true
-		attachment.url=http\://media\:8080/web_asset_store.xml
+		attachment.url=http\://media.recraft.me/web_asset_store.xml
 		attachment.use_path=false
 		attachment.key=test_attachment_key
 		attachment.path=
@@ -144,7 +144,7 @@ Specify 7 stores settings in a file called `specify_settings.py`, such as:
 		MASTER_NAME = 'ben'
 		MASTER_PASSWORD = 'ben'
 		SCHEMA_LANGUAGE = 'en'
-		WEB_ATTACHMENT_URL = "http://media:8080/web_asset_store.xml"
+		WEB_ATTACHMENT_URL = "https://media.recraft.me/web_asset_store.xml"
 		WEB_ATTACHMENT_KEY = 'test_attachment_key'
 		WEB_ATTACHMENT_COLLECTION = None
 		WEB_ATTACHMENT_REQUIRES_KEY_FOR_GET = False
@@ -189,21 +189,18 @@ In addition, timestamped archives are created. You can adjust the Makefile if yo
 ### QUESTIONS
 
 - Can the web asset server deal with audio files?
+	* Yes, but there is no UI viewer currently
 - What is the RAVEN_CONFIG setting?
+	* It is for running Sentry (https://sentry.io) which helps with error reports
 - How can I change the STATS_URL to local capture?
+	* For Specify 7 use the settings file, for Specify 6 not sure how to do it
 - Recommended WB_UPLOAD_LOG_DIR?
+	* $HOME/webuploadlog
 - What is the DEPOSITORY_DIR?
-- Configure the report server to test generation of some reports?
-- DNS-traffic - reach out from ui container - try to use with lab db server from there - see if we can switch from "db" server to "dina-labb.nrm.se"?
-- Container to schedule regular backups - cron or equiv?
-- Use bob-docker/isobuilder to build a Docker image which has docker-compose and all of this project embedded and push to Docker Hub
-- Specify6 web: spin up several (6?) ui containers - one for each user? Or have one  container launch 6 ui processes?
-- Warnings from db: Add mysql_config_editor stuff from here? <http://stackoverflow.com/questions/20751352/suppress-warning-messages-using-mysql-from-within-terminal-but-password-written/22933056#22933056>
+	* $HOME/webuploadlog/specify_depository; a location where exports and other such things for asynchronous download get stored. Currently this is only query result exports and DwCA exports.
+- How to get rid of warnings from db: Add mysql_config_editor stuff from here? <http://stackoverflow.com/questions/20751352/suppress-warning-messages-using-mysql-from-within-terminal-but-password-written/22933056#22933056>
 
 ### ISSUES
 
 - Clicking the "LifeMapper" button gives an error like "javax.media.opengl.GLException: Profiles [GL4bc, GL3bc, GL2, GLES1] not available on device null", no workaround found for that yet.
 - Specify6 web: why does not Copy and Paste work?
-
-
-
