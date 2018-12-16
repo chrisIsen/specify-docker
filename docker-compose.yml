@@ -1,62 +1,93 @@
-version: '3'
+version: '3.7'
 
 volumes:
   data_ui:
   data_attachments:
   data_webassets:
+  data_db:
+  data_certs:
+  data_vhost:
+  data_html:
 
 services:
 
-  dnsmasq:
-    image: andyshinn/dnsmasq:2.76
-    command: --log-facility=-
-    cap_add:
-       - NET_ADMIN
-    ports:
-      - 172.17.0.1:53:53/tcp
-      - 172.17.0.1:53:53/udp
-    links:
-      - proxy:specify6.infrabas.se
-      - proxy:specify7.infrabas.se
-      - proxy:reports.infrabas.se
-      - proxy:media.infrabas.se
+#  dnsmasq:
+#    image: andyshinn/dnsmasq:2.76
+#    command: --log-facility=-
+#    cap_add:
+#       - NET_ADMIN
+#    ports:
+#      - 172.17.0.1:53:53/tcp
+#      - 172.17.0.1:53:53/udp
+#    links:
+#      - proxy:specify6.recraft.me
+#      - proxy:specify7.recraft.me
+#      - proxy:reports.recraft.me
+#      - proxy:media.recraft.me
 
   proxy:
     image: jwilder/nginx-proxy:alpine
+    init: true
     ports:
       - 80:80
       - 443:443
     volumes:
       - /var/run/docker.sock:/tmp/docker.sock:ro
-      - ./certs:/etc/nginx/certs
+      - data_certs:/etc/nginx/certs:ro
+      - data_vhost:/etc/nginx/vhost.d
+      - data_html:/usr/share/nginx/html
+    labels:
+      - "com.github.jrcs.letsencrypt_nginx_proxy_companion.nginx_proxy"
+
+  letsencrypt:
+    image: jrcs/letsencrypt-nginx-proxy-companion
+    init: true
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - data_certs:/etc/nginx/certs
+      - data_vhost:/etc/nginx/vhost.d
+      - data_html:/usr/share/nginx/html
   
   db:
     image: mysql:5.7
+    container_name: specify-docker_db_1
     env_file: .env
+    ports:
+      - 3306:3306
     volumes:
       - ./s6init.sql:/docker-entrypoint-initdb.d/s6init.sql
       - ./data.sql:/tmp/data.sql
       - ./create_schema.sh:/docker-entrypoint-initdb.d/create_schema.sh
+      - data_db:/var/lib/mysql
 
   media:
-    image: bioatlas/assetserver:latest
+    image: recraft/specify-assetserver:latest
+    container_name: specify-docker_media_1
     environment:
-      - VIRTUAL_HOST=media.infrabas.se
+      - VIRTUAL_HOST=media.recraft.me
       - VIRTUAL_PORT=80
+      - LETSENCRYPT_HOST=media.recraft.me
+      - LETSENCRYPT_EMAIL=roger@recraft.me
     volumes:
       - ./AttachmentStorage:/root/Specify/AttachmentStorage
+      - ./web-asset-server/settings.py:/settings.py
 
   report:
-    image: bioatlas/reportserver:latest
+    image: recraft/specify-reportserver:latest
+    container_name: specify-docker_report_1
     environment:
-      - VIRTUAL_HOST=reports.infrabas.se
+      - VIRTUAL_HOST=reports.recraft.me
       - VIRTUAL_PORT=8080
+      - LETSENCRYPT_HOST=reports.recraft.me
+      - LETSENCRYPT_EMAIL=roger@recraft.me
     volumes:
       - data_ui:/opt/Specify
       - ./report-server/m2:/root/.m2
 
   ui:
-    image: bioatlas/specify-desktop:v6.7.01
+    image: recraft/specify-desktop:v6.7.01
+    init: true
+    container_name: specify-docker_ui_1
     volumes:
       - data_ui:/opt/Specify
       - ./user.properties:/root/Specify/user.properties
@@ -67,7 +98,8 @@ services:
       - media
 
   as:
-    image: bioatlas/specify-server:v7
+    image: recraft/specify-server:v7
+    container_name: specify-docker_as_1
     volumes:
       - data_ui:/opt/Specify
       - data_webassets:/code/specifyweb/frontend
@@ -76,26 +108,33 @@ services:
       - db
       - report
       - media
+#    command: ["uwsgi", "--master", "--plugin", "python", "--ini", "/code/uwsgi.ini", "--chdir", "/code"]
 
   wssix:
     image: nginx:alpine
+    init: true
     volumes:
       - data_ui:/opt/Specify
       - data_webassets:/code/specifyweb/frontend
       - ./six.conf:/etc/nginx/conf.d/default.conf
     environment:
-      - VIRTUAL_HOST=specify6.infrabas.se
+      - VIRTUAL_HOST=specify6.recraft.me
+      - LETSENCRYPT_HOST=specify6.recraft.me
+      - LETSENCRYPT_EMAIL=roger@recraft.me
     depends_on:
       - ui
 
   wsseven:
     image: nginx:alpine
+    init: true
     volumes:
       - data_ui:/opt/Specify
       - data_webassets:/code/specifyweb/frontend
       - ./seven.conf:/etc/nginx/conf.d/default.conf
     environment:
-      - VIRTUAL_HOST=specify7.infrabas.se
+      - VIRTUAL_HOST=specify7.recraft.me
+      - LETSENCRYPT_HOST=specify7.recraft.me
+      - LETSENCRYPT_EMAIL=roger@recraft.me
     depends_on:
       - as
 
