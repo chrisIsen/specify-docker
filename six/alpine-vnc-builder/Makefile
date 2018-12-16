@@ -10,11 +10,11 @@ init:
 		wget -qO x11vnc/APKBUILD $(URL_VNC)
 
 build:
-	docker build -t bioatlas/alpine-vnc-build:3.6 .
+	docker build -t recraft/alpine-vnc-build:3.6 .
 	mkdir -p dist
 	docker run -d --name alpine-vnc-build \
 			-u $(UID):$(GID) \
-			bioatlas/alpine-vnc-build:3.6
+			recraft/alpine-vnc-build:3.6
 	docker cp alpine-vnc-build:/home/sdk/.abuild/ dist/
 	docker cp alpine-vnc-build:/home/sdk/packages/unmaintained/x86_64/ dist/
 #		-v $(PWD)/dist/build:/home/sdk/.abuild \

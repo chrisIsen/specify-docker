@@ -1,6 +1,6 @@
 #!make
 PWD := $(shell pwd)
-NAME := bioatlas/specify-desktop:v6.7.01
+NAME := recraft/specify-desktop:v6.7.01
 XSOCK := /tmp/.X11-unix/X0
 SRC_SW := http://update.specifysoftware.org/Specify_unix_64.sh
 
@@ -27,10 +27,10 @@ build:
 debug-ui:
 	xhost +local:
 	docker exec -it \
-		specifydesktop-docker_ui_1 bash
+		specifydesktopdocker_ui_1 bash
 
 get-ui-shell:
-	@docker exec -it specifydesktop-docker_ui_1 \
+	@docker exec -it specifydesktopdocker_ui_1 \
 		bash
 
 clean:
