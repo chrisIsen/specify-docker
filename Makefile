@@ -43,6 +43,7 @@ build:
 	cd web-asset-server && make build
 	cd report-server && make build
 
+
 up:
 	@echo "Launching services"
 	docker-compose up -d 
@@ -58,6 +59,10 @@ get-s6-login:
 		sh -c "mysql --silent -u root -p$(MYSQL_ROOT_PASSWORD) -D$(MYSQL_DATABASE) \
 		-e 'select name, password from specifyuser where SpecifyUserID = 1;'"
 
+set-s6-passwd:
+	docker exec specify-docker_ui_1 \
+		x11vnc -storepasswd $(NOVNCPASS) ~/.vnc/passwd
+
 s7-notifications:
 	@echo "Running Specify 7 django migrations to support Notifications"
 	@docker cp $(PWD)/s7init.sql specify-docker_db_1:/tmp/s7init.sql
@@ -69,6 +74,12 @@ s7-notifications:
 
 	@docker exec -it specify-docker_as_1 \
 		bash -c ". ve/bin/activate && python manage.py migrate"
+
+release:
+	docker push recraft/specify-assetserver:latest
+	docker push recraft/specify-reportserver:latest
+	docker push recraft/specify-server:v7
+	docker push recraft/specify-desktop:v6.7.01
 
 clean:
 	#rm -f Specify_unix_64.sh
@@ -124,5 +135,17 @@ restore-otherbackup:
 	cat s6init_gnm.sql | docker exec -i specify-docker_db_1 mysql -u root -p'$(MYSQL_ROOT_PASSWORD)' -h 127.0.0.1
 	gunzip -c specify-db-latest.sql.gz | docker exec -i specify-docker_db_1 mysql -u root -p'$(MYSQL_ROOT_PASSWORD)' -h 127.0.0.1
 
+restore-nextcloud-gnm:
+	echo "WARN: always backup before restore, because a restore overwrites data and files!"
+	cd nextcloud_gnm && ./get_nextcloud_data.sh && cd ..
+	cat s6init_gnm.sql | docker exec -i specify-docker_db_1 mysql -u root -p'$(MYSQL_ROOT_PASSWORD)' -h 127.0.0.1
+	cat s7init_gnm.sql | docker exec -i specify-docker_db_1 mysql -u root -p'$(MYSQL_ROOT_PASSWORD)' -h 127.0.0.1
+	gunzip -c nextcloud_gnm/specify-db-latest.sql.gz | docker exec -i specify-docker_db_1 mysql -u root -p'$(MYSQL_ROOT_PASSWORD)' -h 127.0.0.1
+	docker run --rm --volumes-from specify-docker_media_1 \
+		-v $(PWD)/nextcloud_gnm:/tmp alpine \
+		sh -c "cd /root/Specify/AttachmentStorage && tar xvf /tmp/specify-files-latest.tar.gz"
+	@echo "After initial migration of database into the system, remember to check:"
+	@echo "Is specify_settings.py now pointing to the new database?"
+	@echo "Has it been restarted?"
 
 
