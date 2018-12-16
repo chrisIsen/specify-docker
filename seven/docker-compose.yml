@@ -18,12 +18,12 @@ services:
       - 3306:3306
 
   ui:
-    image: bioatlas/specify-desktop:v6.6.06
+    image: recraft/specify-desktop:v6.7.01
     volumes:
       - ./srv/s6:/tmp
 
   as:
-    image: bioatlas/specify-server:v7
+    image: recraft/specify-server:v7
     volumes_from:
       - fs
     links:
