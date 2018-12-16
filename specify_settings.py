@@ -18,7 +18,7 @@ MASTER_PASSWORD = 'ben'
 SCHEMA_LANGUAGE = 'en'
 
 # The Specify web attachement server URL.
-WEB_ATTACHMENT_URL = "https://media.infrabas.se/web_asset_store.xml"
+WEB_ATTACHMENT_URL = "https://media.recraft.me/web_asset_store.xml"
 
 # The Specify web attachment server key.
 WEB_ATTACHMENT_KEY = 'test_attachment_key'
@@ -30,7 +30,7 @@ WEB_ATTACHMENT_COLLECTION = None
 WEB_ATTACHMENT_REQUIRES_KEY_FOR_GET = False
 
 # Report runner service
-REPORT_RUNNER_HOST = 'https://reports.infrabas.se'
+REPORT_RUNNER_HOST = 'https://reports.recraft.me'
 REPORT_RUNNER_PORT = '443'
 
 # Workbench uploader log directory.
