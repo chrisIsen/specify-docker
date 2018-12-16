@@ -35,7 +35,7 @@ RUN apt-get -y update && apt-get install -y \
 	uwsgi \
 	uwsgi-plugin-python
 
-#RUN sed -i "s/127\.0\.0\.1/0\.0\.0\.0/g" specifyweb/settings/__init__.py
+RUN sed -i "s/127\.0\.0\.1/0\.0\.0\.0/g" specifyweb/settings/__init__.py
 CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
 #CMD ["uwsgi", "/code/uwsgi.ini"]
 
