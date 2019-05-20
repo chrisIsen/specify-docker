@@ -204,3 +204,8 @@ In addition, timestamped archives are created. You can adjust the Makefile if yo
 
 - Clicking the "LifeMapper" button gives an error like "javax.media.opengl.GLException: Profiles [GL4bc, GL3bc, GL2, GLES1] not available on device null", no workaround found for that yet.
 - Specify6 web: why does not Copy and Paste work?
+- The Python 2.7 image need updating from Debian Jessie to Stretch
+- The Python version may need upgrading soon since Python 2.7 will reach the end of its life on January 1st, 2020
+- The nodejs version 4 raises warnings which instead recommend nodejs version 8,  Bower needs upgrading to at least version 1.8.8
+- The uwsgi config needs tweaking
+
