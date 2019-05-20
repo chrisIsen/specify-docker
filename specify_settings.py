@@ -30,8 +30,8 @@ WEB_ATTACHMENT_COLLECTION = None
 WEB_ATTACHMENT_REQUIRES_KEY_FOR_GET = False
 
 # Report runner service
-REPORT_RUNNER_HOST = 'https://reports.recraft.me'
-REPORT_RUNNER_PORT = '443'
+REPORT_RUNNER_HOST = 'report'
+REPORT_RUNNER_PORT = '8080'
 
 # Workbench uploader log directory.
 # Must exist and be writeable by the web server process.

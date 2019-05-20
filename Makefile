@@ -133,7 +133,8 @@ restore:
 
 restore-otherbackup:
 	cat s6init_gnm.sql | docker exec -i specify-docker_db_1 mysql -u root -p'$(MYSQL_ROOT_PASSWORD)' -h 127.0.0.1
-	gunzip -c specify-db-latest.sql.gz | docker exec -i specify-docker_db_1 mysql -u root -p'$(MYSQL_ROOT_PASSWORD)' -h 127.0.0.1
+	docker exec -i specify-docker_db_1 mysql -u root -p'$(MYSQL_ROOT_PASSWORD)' -h 127.0.0.1 -e 'create database if not exists dina_gnm;'
+	gunzip -c specify-db-latest.sql.gz | docker exec -i specify-docker_db_1 mysql -u root -p'$(MYSQL_ROOT_PASSWORD)' -h 127.0.0.1 -D dina_gnm
 
 restore-nextcloud-gnm:
 	echo "WARN: always backup before restore, because a restore overwrites data and files!"

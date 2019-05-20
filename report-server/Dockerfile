@@ -1,6 +1,10 @@
-FROM maven:3-jdk-7-alpine
+FROM maven:3-jdk-7
 
-RUN apk update && apk add git
+#RUN apk update && apk add git
+
+RUN apt-get update \
+  && apt-get install -y --no-install-recommends \
+	git
 
 COPY report-runner-service /usr/src/app
 
