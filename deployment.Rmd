@@ -235,14 +235,17 @@ Then change the credentials (held in the `.env`file which gets referenced in the
 
 ### Configure Specify
 
-There are three config files to go through. Some detail on configuration settings are in the README.md file.
+There are a few config files to go through. Some detail on configuration settings are in the README.md file. Assuming you want to use "infrabas.se" as the top level domain name, you'd have to do these edits:
 
     # configure Specify settings for example with regards to domain names
-    sed -i "s/infrabas\.se/recraft\.me/g" specify_settings.py
-    sed -i "s/infrabas\.se/recraft\.me/g" user.properties
-    sed -i "s/infrabas\.se/recraft\.me/g" web-asset-server/settings.py
+    sed -i "s/recraft\.me/infrabas\.se/g" specify_settings.py
+    sed -i "s/recraft\.me/infrabas\.se/g" user.properties
+    sed -i "s/recraft\.me/infrabas\.se/g" web-asset-server/settings.py
+    sed -i "s/recraft\.me/infrabas\.se/g" docker-compose.yml
 
-Follow the instructions in README for first time use before logging in to Specify 7.
+Also edit the LETSENCRYPT_EMAIL values in the `docker-compose.yml`.
+
+Then follow the instructions in [README.md](README.md) for first time use before logging in to Specify 7.
 
 
 ### Launch services
@@ -282,8 +285,6 @@ Also verify that the Makefile restore target works.
 
 To load the system with existing Specify database dumps including media assets, see the Makefile for some examples.
 
-
-```
 
 
 
