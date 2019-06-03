@@ -288,7 +288,7 @@ the server:
 
     mkdir -p repos
     cd repos
-    git clone https://github.com/recraft-ou/specify-docker.git
+    git clone https://github.com/mskyttner/specify-docker.git
     cd specify-docker
 
 Then change the credentials (held in the `.env`file which gets
