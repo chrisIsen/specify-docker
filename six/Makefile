@@ -21,6 +21,7 @@ init:
 		cd novnc && cp vnc.html index.html
 
 build:
+	cd alpine-vnc-builder; make init build
 #	@docker -e DISPLAY=$DISPLAY -v $XSOCK:/tmp/.X11-unix -build --tag $(NAME) .
 	@docker build --tag $(NAME) .
 

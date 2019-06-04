@@ -18,7 +18,7 @@ build:
 	docker cp alpine-vnc-build:/home/sdk/.abuild/ dist/
 	docker cp alpine-vnc-build:/home/sdk/packages/unmaintained/x86_64/ dist/
 #		-v $(PWD)/dist/build:/home/sdk/.abuild \
-#		-v $(PWD)/dist/apk:/home/sdk/packages/unmaintained/x86_64 \
+#		-v $(PWD)/dist/apk:/home/sdk/packages/unmaintained/x86_64 
 	docker rm alpine-vnc-build
 	mv dist/x86_64/* dist
 	mv dist/.abuild/* dist

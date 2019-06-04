@@ -46,7 +46,7 @@ WORKDIR /usr/src/specify
 RUN chmod +x Specify_unix_64.sh
 RUN bash -c "./Specify_unix_64.sh -q -console"
 RUN rm ./Specify_unix_64.sh
-RUN mkdir /opt && ln -s /usr/local/Specify/ /opt/Specify
+RUN mkdir -p /opt && ln -s /usr/local/Specify/ /opt/Specify
 VOLUME /opt/Specify
 
 RUN cp /etc/X11/xinit/xinitrc /root/.xinitrc
