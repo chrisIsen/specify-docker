@@ -27,11 +27,11 @@ Source code and binaries
 
 Binaries:
 
-<https://hub.docker.com/u/recraft>
+<a href="https://hub.docker.com/u/recraft" class="uri">https://hub.docker.com/u/recraft</a>
 
 Source code:
 
-<https://github.com/recraft-ou/specify-docker>
+<a href="https://github.com/recraft-ou/specify-docker" class="uri">https://github.com/recraft-ou/specify-docker</a>
 
 Resource requirements
 ---------------------
@@ -66,9 +66,9 @@ cloud you may need to bootstrap a cluster of docker nodes across a set
 of service providers (using your own hardware and/or a set of cloud IaaS
 providers). This can be automated, for example using the
 `docker-machine` - a tool which can be installed from
-<https://github.com/docker/machine/releases> and be used to remotely
-control Docker machines and swarms or clusters of nodes running Docker
-containers.
+<a href="https://github.com/docker/machine/releases" class="uri">https://github.com/docker/machine/releases</a>
+and be used to remotely control Docker machines and swarms or clusters
+of nodes running Docker containers.
 
 In this case, since the dockerized Specify installation runs nicely with
 all services running on a single VPS, there is in most cases probably no
@@ -107,7 +107,8 @@ This option offers the following characteristics:
 -   Enjoy existing support services, issue ticks and get help etc
 
 For Swedish authorities the SUNET Cloud provides a good national option,
-branded under the name SafeSpring: <https://www.safespring.com/>
+branded under the name SafeSpring:
+<a href="https://www.safespring.com/" class="uri">https://www.safespring.com/</a>
 
 Using Digital Ocean
 ===================
@@ -222,7 +223,7 @@ docker-machine --debug create \
 ```
 
 For more information on how to provision the swarm, please see
-<https://docs.docker.com/engine/swarm/swarm-tutorial/create-swarm/>.
+<a href="https://docs.docker.com/engine/swarm/swarm-tutorial/create-swarm/" class="uri">https://docs.docker.com/engine/swarm/swarm-tutorial/create-swarm/</a>.
 
 Once the node(s) has been provisioned, shell access is available through
 `docker-machine ssh recraft-specify` and upgrades can be made through
@@ -352,3 +353,183 @@ Also verify that the Makefile restore target works.
 
 To load the system with existing Specify database dumps including media
 assets, see the Makefile for some examples.
+
+FAQ
+===
+
+How do I backup the server?
+---------------------------
+
+The back and restore targets in the `Makefile` which are scheduled on
+using `crontab` sets up backups of the application and its data. This is
+the most important part as a working backup and restore allows you to
+recover from a disaster.
+
+If the cloud server crashes or burns completely, it will be important to
+have off-site backups. This involves setting up a transfer of backup
+files outside of the cloud server itself, for example to be stored on a
+local NAS, although other options exist too, such as encrypting the
+backup files and pushing them to the Internet Archive or similar
+approaches.
+
+For backing up the entire server itself, the cloud provider may offer
+ways to do snapshots, exactly how to use this can vary between cloud
+providers (Open Stack-based infrastructures may have one way of doing it
+while other IaaS-providers offer similar but other ways / commands).
+
+Where are the logs?
+-------------------
+
+There are server logs at various levels and places such as `/var/log`.
+
+At the application level there are logs also at different places:
+
+-   Client-side: JS log messages in the web browser
+-   Server-side: Logs from the different application components (use
+    `docker-compose logs [servicename]`)
+
+Is there a difference between run-time and build-time upgrades of the application
+---------------------------------------------------------------------------------
+
+Build-time updgrades of Specify Software components can be made by
+editing Makefiles and rebuilding with `make build`. These can be pushed
+with `make release` and then used in the application composition by
+editing the `docker-compose.yml` file and updating tags to use the new
+version number.
+
+Run-time upgrades can be prompted and performed too, at least for
+Specify 6. The upgrade program will then download and install the
+relevant updates, perform schema migrations etc within the running
+container.
+
+How is it possible to change Specify 7 configuations?
+-----------------------------------------------------
+
+In the `docker-compose.yml` file so called `volumes:` provide a way to
+map files from the host into the container, such as
+`specify_settings.py`; it is a kind of mount that happens where the file
+on the host could be named `./specify_settings.py` which then gets
+mapped to and mounted into the container at a location such as
+`/code/specifyweb/settings/specify_settings.py`.
+
+How can I get a prompt inside one of the running containers?
+------------------------------------------------------------
+
+This depends a little on what kind of shells are running in a container,
+often `bash` is available, sometimes you need to use `ash`, and
+generally `sh` can be used:
+
+    # service based on container with "bash" available
+    docker-compose exec db bash
+
+    # service based on minimal linux alpine base, uses "ash" instead of "bash"
+    docker-compose exec proxy ash
+
+How do I connect to the database using MySQL Workbench?
+-------------------------------------------------------
+
+Since the services in the application composition runs in their own SDN
+you need to do two things:
+
+-   Expose the 3306 port of the db container in the `docker-compose.yml`
+    file
+-   Establish a tunnel to the cloud server to that local port, for
+    example using something along this pattern
+    `ssh -i ~/.ssh/mykeytothecloudserver -fNL 3306:127.0.0.1:3306 ubuntu@fqdn.cloud.server`
+
+You can the connect a locally running MySQL Workbench to the database
+using `localhost:3306`.
+
+What does the proxy do?
+-----------------------
+
+It routes traffic between services in the application composition. It
+helps with mapping a public domain name to the services and along with
+`letsencrypt` it provides TLS/SSL.
+
+How do I manage users in Specify 7?
+-----------------------------------
+
+Documentation is available here:
+
+-   <a href="https://www.sustain.specifysoftware.org/support/7-documentation/" class="uri">https://www.sustain.specifysoftware.org/support/7-documentation/</a>
+-   <a href="https://www.sustain.specifysoftware.org/support/video-snippets/" class="uri">https://www.sustain.specifysoftware.org/support/video-snippets/</a>
+-   <a href="https://www.sustain.specifysoftware.org/support/services-2/" class="uri">https://www.sustain.specifysoftware.org/support/services-2/</a>
+
+If not covered in there, it is possible to check the open issues related
+to, say user management in Specify 7, and to open an issue here to ask
+the maintainers about specific new issues or errors:
+
+-   <a href="https://github.com/specify/specify7/issues?utf8=%E2%9C%93&amp;q=is%3Aissue+is%3Aopen+user+admin" class="uri">https://github.com/specify/specify7/issues?utf8=%E2%9C%93&amp;q=is%3Aissue+is%3Aopen+user+admin</a>
+
+Why are there references to ‘recraft’?
+--------------------------------------
+
+Such references can be found in these files:
+
+-   README and deployment documentation
+-   docker-compose.yml files
+-   Makefiles
+
+Mostly this is about “slugs” ie public identifiers to Docker Images that
+can be pulled globally from the Docker Hub. If these images had been
+provided officially by Specify then the slugs would read something like
+“specify/specify-server:v7” etc. If Specify Software were to accept this
+dockerized setup of the Specify Software components, then ideally they’d
+provide a slug like that.
+
+Until then these images are served up under an account named `recraft`
+from Docker Hub and are published here:
+
+-   <a href="https://hub.docker.com/u/recraft" class="uri">https://hub.docker.com/u/recraft</a>
+
+It is also about deployment (sub)domains - and the deloyment guide
+writes about how to switch from one to another.
+
+How are certs handled?
+----------------------
+
+[`letsencrypt-nginx-proxy-companion`](https://github.com/JrCs/docker-letsencrypt-nginx-proxy-companion)
+is a lightweight companion container for nginx-proxy. It handles the
+automated creation, renewal and use of Let’s Encrypt certificates for
+proxied Docker containers. This means that:
+
+-   you don’t need to buy certs; free certs are issued by Let’s Encrypt
+-   renewal is automatic
+-   in case of issues, the DEFAULT\_EMAIL environment variable is used
+    to reach out to the administrator
+
+How do I renew SSL certificates?
+--------------------------------
+
+Is is automatic. Updates can be forced and status can be checked with:
+
+    docker-compose exec letsencrypt ./cert_status
+    docker-compose exec letsencrypt ./force_renew
+
+How to enter the `letsencrypt` container
+----------------------------------------
+
+This is normally not needed, but can be achieved by:
+
+    # using docker-compose exec [name-of-service] [command]
+    docker-compose exec letsencrypt bash
+
+    # or (not as convenient) using docker [fully-qualified-name-of-container] [command]
+    docker exec -it specify-docker_letsencrypt_1 bash
+
+How many VMs are there?
+-----------------------
+
+Docker runs `cgroups` isolated processes ie no VMs are running, just
+processes grouped together which gives minimal overhead. You list the
+running containers with `docker-compose ps` or `docker ps`.
+
+> A full virtualized system gets its own set of resources allocated to
+> each VM, and does minimal sharing. You get isolation, but it is much
+> heavier (requires more resources). With Docker you get less isolation,
+> but the containers are lightweight (require fewer resources). So you
+> could easily run thousands of containers on a host, and it won’t even
+> blink.
+
+![Docer vs VMs](https://i.stack.imgur.com/exIhw.png)
