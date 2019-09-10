@@ -314,7 +314,7 @@ Build-time updgrades of Specify Software components can be made by editing Makef
 
 Run-time upgrades can be prompted and performed too, at least for Specify 6. The upgrade program will then download and install the relevant updates, perform schema migrations etc within the running container.
 
-## How is it possible to change Specify 7 configuations?
+## How is it possible to change Specify 7 configruations?
 
 In the `docker-compose.yml` file so called `volumes:` provide a way to map files from the host into the container, such as `specify_settings.py`; it is a kind of mount that happens where the file on the host could be named `./specify_settings.py` which then gets mapped to and mounted into the container at a location such as `/code/specifyweb/settings/specify_settings.py`.
 
