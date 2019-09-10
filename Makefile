@@ -79,7 +79,7 @@ s7-notifications:
 release:
 	docker push recraft/specify-assetserver:latest
 	docker push recraft/specify-reportserver:latest
-	docker push recraft/specify-server:v7
+	docker push recraft/specify-server:v7.3.1
 	docker push recraft/specify-desktop:v6.7.03
 
 clean:

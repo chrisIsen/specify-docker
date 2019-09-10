@@ -1,8 +1,9 @@
 #!make
 PWD := $(shell pwd)
-NAME := recraft/specify-desktop:v6.7.01
+NAME := recraft/specify-desktop:v6.7.03
 XSOCK := /tmp/.X11-unix/X0
 SRC_SW := http://update.specifysoftware.org/Specify_unix_64.sh
+#SRC_SW := https://github.com/specify/specify6/releases/download/v6.7.03/Specify_unix_64.sh
 
 all: clean init build
 .PHONY: all
