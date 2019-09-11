@@ -9,12 +9,12 @@ ENV HOME=/root \
 	DISPLAY_WIDTH=1024 \
 	DISPLAY_HEIGHT=768
 
-COPY alpine-vnc-builder/dist/ /tmp/.abuild
-RUN find /tmp/.abuild -name "*.pub" -exec cp {} /etc/apk/keys \;
-RUN apk --no-cache --update add /tmp/.abuild/x11vnc-0.9.13-r0.apk
+#COPY alpine-vnc-builder/dist/ /tmp/.abuild
+#RUN find /tmp/.abuild -name "*.pub" -exec cp {} /etc/apk/keys \;
+#RUN apk --no-cache --update add /tmp/.abuild/x11vnc-0.9.13-r0.apk
 
-RUN echo "http://dl-cdn.alpinelinux.org/alpine/v3.6/main" > /etc/apk/repositories
-RUN echo "http://dl-cdn.alpinelinux.org/alpine/v3.6/community" >> /etc/apk/repositories
+#RUN echo "http://dl-cdn.alpinelinux.org/alpine/v3.6/main" > /etc/apk/repositories
+#RUN echo "http://dl-cdn.alpinelinux.org/alpine/v3.6/community" >> /etc/apk/repositories
 RUN echo "http://dl-cdn.alpinelinux.org/alpine/edge/testing" >> /etc/apk/repositories
 RUN apk update && apk upgrade 
 

@@ -85,7 +85,7 @@ services:
       - ./report-server/m2:/root/.m2
 
   ui:
-    image: recraft/specify-desktop:v6.7.01
+    image: recraft/specify-desktop:v6.7.03
     init: true
     container_name: specify-docker_ui_1
     volumes:
@@ -98,7 +98,7 @@ services:
       - media
 
   as:
-    image: recraft/specify-server:v7
+    image: recraft/specify-server:v7.3.1
     container_name: specify-docker_as_1
     volumes:
       - data_ui:/opt/Specify
