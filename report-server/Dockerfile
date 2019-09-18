@@ -1,10 +1,8 @@
 FROM maven:3-jdk-7
 
-#RUN apk update && apk add git
-
-RUN apt-get update \
-  && apt-get install -y --no-install-recommends \
-	git
+RUN printf "\ndeb http://httpredir.debian.org/debian jessie main contrib\n" >> /etc/apt/sources.list.d/contrib.list && \
+	apt-get update && apt-get install -y --no-install-recommends \
+	git ttf-mscorefonts-installer
 
 COPY report-runner-service /usr/src/app
 
