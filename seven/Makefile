@@ -23,7 +23,7 @@ init:
 		https://github.com/specify/specify7
 
 build:
-	docker build -t recraft/specify-server:v7.3.1 .
+	docker build -t kulturutveckling/specify-server:v7.3.1 .
 
 up:
 	docker-compose up -d
@@ -36,7 +36,7 @@ clean:
 	rm -f data.sql Specify_unix_64.sh
 
 release:
-	docker push recraft/specify-server:v7.3.1
+	docker push kulturutveckling/specify-server:v7.3.1
 
 get-specify-login:
 	@docker-compose run db \
@@ -44,8 +44,8 @@ get-specify-login:
 		-e 'select name, password from specifyuser where SpecifyUserID = 1;'"
 
 debug:
-	docker run --rm -it recraft/specify-server:v7.3.1 bash
+	docker run --rm -it kulturutveckling/specify-server:v7.3.1 bash
 
 config:
-	docker cp recraft/specify-server:v7.3.1:specifyweb/settings/specify_settings.py .
+	docker cp kulturutveckling/specify-server:v7.3.1:specifyweb/settings/specify_settings.py .
 

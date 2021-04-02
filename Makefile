@@ -9,8 +9,8 @@ GID = $(shell id -g)
 
 SRC_DATA := https://github.com/DINA-Web/datasets/blob/master/specify/DemoDatawImages.sql.gz?raw=true
 SRC_IMAGES := https://github.com/DINA-Web/datasets/blob/master/specify/AttachmentStorage.zip?raw=true
-#SRC_SW := http://update.specifysoftware.org/Specify_unix_64.sh
-SRC_SW := https://github.com/specify/specify6/releases/download/v6.7.03/Specify_unix_64.sh
+SRC_SW := http://update.specifysoftware.org/Specify_unix_64.sh
+#SRC_SW := https://github.com/specify/specify6/releases/download/v6.7.03/Specify_unix_64.sh
 
 all: clean init build up
 .PHONY: all
