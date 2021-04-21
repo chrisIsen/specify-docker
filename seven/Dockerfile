@@ -16,7 +16,7 @@ ADD ./specify7 /code/
 
 WORKDIR /code
 
-RUN apt-get install -y \
+RUN apt-get update && apt-get install -y \
 	libsasl2-dev python-dev libldap2-dev libssl-dev
 
 RUN pip install -r requirements.txt

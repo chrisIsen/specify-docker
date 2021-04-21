@@ -2,7 +2,8 @@
 
 SRC_DATA :=  http://archive.org/download/dw-collectionsdata/dina_web.sql.gz
 SRC_SW := http://update.specifysoftware.org/Specify_unix_64.sh
-SRC_S7 := https://github.com/specify/specify7/archive/v7.3.1.tar.gz
+SRC_S7 := https://github.com/specify/specify7/archive/v7.5.0.tar.gz
+
 
 all: build up
 
