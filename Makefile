@@ -77,10 +77,10 @@ s7-notifications:
 		bash -c ". ve/bin/activate && python manage.py migrate"
 
 release:
-	docker push recraft/specify-assetserver:latest
-	docker push recraft/specify-reportserver:latest
-	docker push recraft/specify-server:v7.3.1
-	docker push recraft/specify-desktop:v6.7.03
+	docker push kulturutveckling/specify-assetserver:latest
+	docker push kulturutveckling/specify-reportserver:latest
+	docker push kulturutveckling/specify-server:v7.3.1
+	docker push kulturutveckling/specify-desktop:v6.7.03
 
 clean:
 	#rm -f Specify_unix_64.sh

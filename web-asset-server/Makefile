@@ -10,17 +10,17 @@ init:
 		unzip AttachmentStorage.zip && rm AttachmentStorage.zip)
 
 build: init
-	docker build --tag recraft/specify-assetserver:latest .
+	docker build --tag kulturutveckling/specify-assetserver:latest .
 
 debug:
 	docker run --rm -it --env-file=.env \
 		-p 8080:8080 -v $(PWD)/AttachmentStorage:/home/specify/attachments \
-		recraft/specify-assetserver:latest sh
+		kulturutveckling/specify-assetserver:latest sh
 
 up:
 	docker run --name media -d --env-file=.env \
 		-p 8080:8080 -v $(PWD)/AttachmentStorage:/home/specify/attachments \
-		recraft/specify-assetserver:latest
+		kulturutveckling/specify-assetserver:latest
 
 test:
 	firefox http://localhost:8080/web_asset_store.xml & 

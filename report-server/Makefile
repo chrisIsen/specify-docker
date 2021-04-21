@@ -14,12 +14,12 @@ init:
 	@cd report-runner-service && sed 's/1.5-beta1/1.9-dev/g' pom.xml > pom.xml.tmp && mv pom.xml.tmp pom.xml
 
 build: init
-	docker build --tag recraft/specify-reportserver:v6.2.2 .
+	docker build --tag kulturutveckling/specify-reportserver:v6.2.2 .
 
 up:
 	docker run -d --name report -it \
 		-p 8484:8080 -v $(PWD)/m2:/root/.m2 \
-		recraft/specify-reportserver:v6.2.2
+		kulturutveckling/specify-reportserver:v6.2.2
 
 test:
 	firefox http://localhost:8484/ & 
