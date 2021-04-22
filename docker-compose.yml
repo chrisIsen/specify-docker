@@ -47,6 +47,9 @@ services:
       - data_certs:/etc/nginx/certs
       - data_vhost:/etc/nginx/vhost.d
       - data_html:/usr/share/nginx/html
+    depends_on:
+      - wssix
+      - proxy  
   
   db:
     image: mysql:5.7
@@ -64,10 +67,10 @@ services:
     image: kulturutveckling/specify-assetserver:latest
     container_name: specify-docker_media_1
     environment:
-      - VIRTUAL_HOST=media.recraft.me
+      - VIRTUAL_HOST=media.gnmspecify.se
       - VIRTUAL_PORT=80
-      - LETSENCRYPT_HOST=media.recraft.me
-      - LETSENCRYPT_EMAIL=roger@recraft.me
+      - LETSENCRYPT_HOST=media.gnmspecify.se
+      - LETSENCRYPT_EMAIL=kulturutveckling.webadmin@vgregion.se
     volumes:
       - ./AttachmentStorage:/root/Specify/AttachmentStorage
       - ./web-asset-server/settings.py:/settings.py
@@ -76,10 +79,10 @@ services:
     image: kulturutveckling/specify-reportserver:v6.9.0
     container_name: specify-docker_report_1
     environment:
-      - VIRTUAL_HOST=reports.recraft.me
+      - VIRTUAL_HOST=reports.gnmspecify.se
       - VIRTUAL_PORT=8080
-      - LETSENCRYPT_HOST=reports.recraft.me
-      - LETSENCRYPT_EMAIL=roger@recraft.me
+      - LETSENCRYPT_HOST=reports.gnmspecify.se
+      - LETSENCRYPT_EMAIL=kulturutveckling.webadmin@vgregion.se
     volumes:
       - data_ui:/opt/Specify
       - ./report-server/m2:/root/.m2
@@ -118,9 +121,9 @@ services:
       - data_webassets:/code/specifyweb/frontend
       - ./six.conf:/etc/nginx/conf.d/default.conf
     environment:
-      - VIRTUAL_HOST=specify6.recraft.me
-      - LETSENCRYPT_HOST=specify6.recraft.me
-      - LETSENCRYPT_EMAIL=roger@recraft.me
+      - VIRTUAL_HOST=specify6.gnmspecify.se
+      - LETSENCRYPT_HOST=specify6.gnmspecify.se
+      - LETSENCRYPT_EMAIL=kulturutveckling.webadmin@vgregion.se
     depends_on:
       - ui
 
@@ -132,9 +135,9 @@ services:
       - data_webassets:/code/specifyweb/frontend
       - ./seven.conf:/etc/nginx/conf.d/default.conf
     environment:
-      - VIRTUAL_HOST=specify7.recraft.me
-      - LETSENCRYPT_HOST=specify7.recraft.me
-      - LETSENCRYPT_EMAIL=roger@recraft.me
+      - VIRTUAL_HOST=specify7.gnmspecify.se
+      - LETSENCRYPT_HOST=specify7.gnmspecify.se
+      - LETSENCRYPT_EMAIL=kulturutveckling.webadmin@vgregion.se
     depends_on:
       - as
 
