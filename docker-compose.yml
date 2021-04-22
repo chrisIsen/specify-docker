@@ -73,7 +73,7 @@ services:
       - ./web-asset-server/settings.py:/settings.py
 
   report:
-    image: kulturutveckling/specify-reportserver:6.9.0
+    image: kulturutveckling/specify-reportserver:v6.9.0
     container_name: specify-docker_report_1
     environment:
       - VIRTUAL_HOST=reports.recraft.me
@@ -98,7 +98,7 @@ services:
      # - media
 
   as:
-    image: kulturutveckling/specify-server:v7.3.1
+    image: kulturutveckling/specify-server:latest
     container_name: specify-docker_as_1
     volumes:
       - data_ui:/opt/Specify
