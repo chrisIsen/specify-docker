@@ -92,7 +92,7 @@ services:
     init: true
     container_name: specify-docker_ui_1
     volumes:
-      #- data_ui:/opt/Specify
+      - data_ui:/opt/Specify
       - ./user.properties:/root/Specify/user.properties
       - ./AttachmentStorage:/root/Specify/AttachmentStorage
     depends_on:
