@@ -73,7 +73,7 @@ services:
       - ./web-asset-server/settings.py:/settings.py
 
   report:
-    image: kulturutveckling/specify-reportserver:latest
+    image: kulturutveckling/specify-reportserver:v6.2.2
     container_name: specify-docker_report_1
     environment:
       - VIRTUAL_HOST=reports.recraft.me
@@ -89,17 +89,19 @@ services:
     init: true
     container_name: specify-docker_ui_1
     volumes:
-      #- data_ui:/opt/Specify
+      - data_ui:/opt/Specify
       - ./user.properties:/root/Specify/user.properties
       - ./AttachmentStorage:/root/Specify/AttachmentStorage
     depends_on:
       - db
-     # - report
-     # - media
+      - report
+      - media
 
   as:
-    image: kulturutveckling/specify-server:v7.3.1
+    image: kulturutveckling/specify-server:v7.5.0
     container_name: specify-docker_as_1
+    ports:
+      - "8080:80"
     volumes:
       - data_ui:/opt/Specify
       - data_webassets:/code/specifyweb/frontend
