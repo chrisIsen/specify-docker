@@ -129,6 +129,8 @@ services:
   wsseven:
     image: nginx:alpine
     init: true
+    ports:
+      - "3030:80"
     volumes:
       - data_ui:/opt/Specify
       - data_webassets:/code/specifyweb/frontend
