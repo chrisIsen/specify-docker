@@ -12,19 +12,20 @@ init:
 	@test -f Specify_unix_64.sh || \
 		(wget $(SRC_SW) && chmod +x Specify_unix_64.sh)
 
-#	@echo "Caching downloads locally..."
-#	@test -f v7.3.1.tar.gz || \
-#		(wget $(SRC_S7) && chmod +x v7.3.1.tar.gz)
+	@echo "Caching downloads locally..."
+#	@test -f v7.5.0.tar.gz || \
+#		(wget $(SRC_S7) && chmod +x v7.5.0.tar.gz)
+	@test -d specify7 || git clone -b 'production' --single-branch --depth=1 \
+		https://github.com/specify/specify7
 
 	@echo "Caching db dump from IA..."
 	@test -f data.sql || \
 		(curl --progress-bar -L $(SRC_DATA) -o data.sql.gz && \
 		gunzip data.sql.gz)
-	@test -d specify7 || git clone -b 'v7.3.1' --single-branch --depth=1 \
-		https://github.com/specify/specify7
+
 
 build:
-	docker build -t kulturutveckling/specify-server:v7.3.1 .
+	docker build -t kulturutveckling/specify-server:v7.5.0 .
 
 up:
 	docker-compose up -d
@@ -37,7 +38,7 @@ clean:
 	rm -f data.sql Specify_unix_64.sh
 
 release:
-	docker push kulturutveckling/specify-server:v7.3.1
+	docker push kulturutveckling/specify-server:v7.5.0
 
 get-specify-login:
 	@docker-compose run db \
@@ -45,8 +46,8 @@ get-specify-login:
 		-e 'select name, password from specifyuser where SpecifyUserID = 1;'"
 
 debug:
-	docker run --rm -it kulturutveckling/specify-server:v7.3.1 bash
+	docker run --rm -it kulturutveckling/specify-server:v7.5.0 bash
 
 config:
-	docker cp kulturutveckling/specify-server:v7.3.1:specifyweb/settings/specify_settings.py .
+	docker cp kulturutveckling/specify-server:v7.5.0:specifyweb/settings/specify_settings.py .
 

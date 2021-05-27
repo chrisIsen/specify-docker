@@ -76,7 +76,8 @@ services:
       - ./web-asset-server/settings.py:/settings.py
 
   report:
-    image: kulturutveckling/specify-reportserver:v6.9.0
+    image: kulturutveckling/specify-reportserver:v6.2.2
+#    image: kulturutveckling/specify-reportserver:v6.9.0
     container_name: specify-docker_report_1
     environment:
       - VIRTUAL_HOST=reports.gnmspecify.se
@@ -97,12 +98,15 @@ services:
       - ./AttachmentStorage:/root/Specify/AttachmentStorage
     depends_on:
       - db
-     # - report
-     # - media
+      - report
+      - media
 
   as:
-    image: kulturutveckling/specify-server:latest
+    image: kulturutveckling/specify-server:v7.5.0
+#    image: kulturutveckling/specify-server:latest
     container_name: specify-docker_as_1
+    ports:
+      - "8080:80"
     volumes:
       - data_ui:/opt/Specify
       - data_webassets:/code/specifyweb/frontend
@@ -130,6 +134,8 @@ services:
   wsseven:
     image: nginx:alpine
     init: true
+    ports:
+      - "3030:80"
     volumes:
       - data_ui:/opt/Specify
       - data_webassets:/code/specifyweb/frontend

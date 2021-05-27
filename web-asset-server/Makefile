@@ -14,21 +14,21 @@ build: init
 
 debug:
 	docker run --rm -it --env-file=.env \
-		-p 8080:8080 -v $(PWD)/AttachmentStorage:/home/specify/attachments \
+		-p 8081:8081 -v $(PWD)/AttachmentStorage:/home/specify/attachments \
 		kulturutveckling/specify-assetserver:latest sh
 
 up:
 	docker run --name media -d --env-file=.env \
-		-p 8080:8080 -v $(PWD)/AttachmentStorage:/home/specify/attachments \
+		-p 8081:8081 -v $(PWD)/AttachmentStorage:/home/specify/attachments \
 		kulturutveckling/specify-assetserver:latest
 
 test:
-	firefox http://localhost:8080/web_asset_store.xml & 
+	firefox http://localhost:8081/web_asset_store.xml & 
 
 cfg:
 	@echo "Use these settings in Specify 6 user.properties file"
 	@echo "USE_GLOBAL_PREFS=true"
-	@echo "attachment.url=http\://media\:8080/web_asset_store.xml"
+	@echo "attachment.url=http\://media\:8081/web_asset_store.xml"
 	@echo "attachment.use_path=false"
 	@echo "attachment.path="
 	@echo "attachment.key=test_attachment_key"

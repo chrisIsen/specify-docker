@@ -1,11 +1,15 @@
+#!/usr/bin/env python
+
 from os import path, mkdir, remove
 from mimetypes import guess_type
 from sh import convert
 from glob import glob
-from urllib import pathname2url, quote
+from urllib.request import pathname2url
+from urllib.parse import quote
 from collections import defaultdict, OrderedDict
 from functools import wraps
 import exifread, json, hmac, time
+import bottle
 
 from bottle import (
     Response, request, response, static_file, template, abort,
@@ -15,7 +19,7 @@ import settings
 
 def log(msg):
     if settings.DEBUG:
-        print msg
+        print(msg)
 
 def get_rel_path(coll, thumb_p):
     """Return originals or thumbnails subdirectory of the main
@@ -238,7 +242,7 @@ def fileupload():
     if not path.exists(basepath):
         mkdir(basepath)
 
-    upload = request.files.values()[0]
+    upload = list(request.files.values())[0]
     upload.save(pathname, overwrite=True)
 
     response.content_type = 'text/plain; charset=utf-8'
@@ -297,7 +301,7 @@ def getmetadata():
             abort(404, 'DateTime not found in EXIF')
 
     data = defaultdict(dict)
-    for key, value in tags.items():
+    for key, value in list(tags.items()):
         parts = key.split()
         if len(parts) < 2: continue
         try:
@@ -309,7 +313,7 @@ def getmetadata():
 
     response.content_type = 'application/json'
     data = [OrderedDict( (('Name', key), ('Fields', value)) )
-            for key,value in data.items()]
+            for key,value in list(data.items())]
 
     return json.dumps(data, indent=4)
 
@@ -333,3 +337,5 @@ if __name__ == '__main__':
     from bottle import run
     run(host='0.0.0.0', port=settings.PORT, server=settings.SERVER,
         debug=settings.DEBUG, reloader=settings.DEBUG)
+else:
+	app = application = bottle.default_app()

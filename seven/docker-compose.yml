@@ -23,7 +23,9 @@ services:
       - ./srv/s6:/tmp
 
   as:
-    image: kulturutveckling/specify-server:v7
+    image: kulturutveckling/specify-server:v7.5.0
+    ports:
+      - "8080:80"
     volumes_from:
       - fs
     links:
