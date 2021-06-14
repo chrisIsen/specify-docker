@@ -30,7 +30,8 @@ EXPOSE 80
 #CMD python3 server.py
 
 CMD [ "uwsgi", \
-	"--socket", "0.0.0.0:8081", \
+	"--http-socket", "0.0.0.0:8081", \
+	"--buffer-size", "32768", \
 	"--uid", "uwsgi", \
 	"--plugins", "python3", \
 	"--protocol", "uwsgi", \

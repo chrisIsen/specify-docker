@@ -63,23 +63,23 @@ RUN . ve/bin/activate && make specifyweb/settings/build_version.py specifyweb/se
 
 USER root
 
-RUN cd /opt/ && \
-	git clone --depth=1 https://github.com/specify/web-asset-server/ && \
-	chown -R specify:specify web-asset-server
+#RUN cd /opt/ && \
+#	git clone --depth=1 https://github.com/specify/web-asset-server/ && \
+#	chown -R specify:specify web-asset-server
 
-WORKDIR /opt/web-asset-server
+#WORKDIR /opt/web-asset-server
 
-USER specify
+#USER specify
 
-RUN python3.6 -m venv ve && . ve/bin/activate && \
-	ve/bin/pip install -r requirements.txt 
+#RUN python3.6 -m venv ve && . ve/bin/activate && \
+#	ve/bin/pip install -r requirements.txt 
 	
-RUN sed -i "s/'test_attachment_key'/None/" settings.py && \
-	sed -i "s/8080/8081/" settings.py
+#RUN sed -i "s/'test_attachment_key'/None/" settings.py && \
+#	sed -i "s/8080/8081/" settings.py
 
 # REM: enable apache2 integration for specify7
 
-USER root
+#USER root
 
 RUN rm /etc/apache2/sites-enabled/* && \
 	ln -s /opt/specify7/specifyweb_apache.conf /etc/apache2/sites-enabled/
@@ -95,5 +95,9 @@ RUN chmod +x /opt/Specify_unix_64.sh && \
 RUN ln -sf /dev/stderr /var/log/apache2/error.log && \
 	ln -sf /dev/stdout /var/log/apache2/access.log
 
+#COPY web-asset-server.wsgi /opt/web-asset-server/
+#RUN ln -s /opt/web-asset-server/web-asset-server_apache.conf /etc/apache2/sites-enabled/
+
 EXPOSE 80
+#EXPOSE 8081
 CMD . ve/bin/activate && apachectl -D FOREGROUND

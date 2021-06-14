@@ -28,7 +28,7 @@ ALLOW_STATIC_FILE_ACCESS = True
 
 # These values are interpolated into the web_asset_store.xml resource
 # so the client knows how to talk to the server.
-HOST = 'media.recraft.me'
+HOST = 'media.kulturutveckling.se'
 PORT = 80
 
 # Port the development test server should listen on.

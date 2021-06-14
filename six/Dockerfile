@@ -16,6 +16,9 @@ ENV HOME=/root \
 #RUN echo "http://dl-cdn.alpinelinux.org/alpine/v3.6/main" > /etc/apk/repositories
 #RUN echo "http://dl-cdn.alpinelinux.org/alpine/v3.6/community" >> /etc/apk/repositories
 RUN echo "http://dl-cdn.alpinelinux.org/alpine/edge/testing" >> /etc/apk/repositories
+RUN echo "http://dl-cdn.alpinelinux.org/alpine/edge/community" >> /etc/apk/repositories
+RUN echo "http://dl-cdn.alpinelinux.org/alpine/edge/main" >> /etc/apk/repositories
+
 RUN apk update && apk upgrade 
 
 RUN apk --no-cache add \
@@ -25,7 +28,9 @@ RUN apk --no-cache add \
 	git \
 	socat \
 	supervisor \
-	xvfb
+	xvfb \
+	mysql-client \
+	nettle
 
 # Clone noVNC from github
 RUN git clone https://github.com/kanaka/noVNC.git /root/noVNC \

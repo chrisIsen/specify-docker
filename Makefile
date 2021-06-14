@@ -47,7 +47,10 @@ build:
 
 up:
 	@echo "Launching services"
-	docker-compose up -d 
+	docker-compose up -d
+
+ssl-certs-init:
+	docker-compose exec proxy sh -c "cp /tmp/certs/* /etc/nginx/certs/"
 
 get-db-shell:
 	@docker exec -it specify-docker_db_1 \
@@ -93,11 +96,13 @@ down:
 ssl-certs:
 	@echo "Generating SSL certs using https://hub.docker.com/r/paulczar/omgwtfssl/"
 	docker run -v /tmp/certs:/certs \
-		-e SSL_SUBJECT=infrabas.se \
-		-e SSL_DNS=specify6.infrabas.se,specify7.infrabas.se,reports.infrabas.se,media.infrabas.se \
+		-e SSL_SUBJECT=kulturutveckling.se \
+		-e SSL_DNS=specify6.kulturutveckling.se,specify7.kulturutveckling.se,reports.kulturutveckling.se,media.kulturutveckling.se \
 	paulczar/omgwtfssl
-	cp /tmp/certs/cert.pem certs/infrabas.se.crt
-	cp /tmp/certs/key.pem certs/infrabas.se.key
+	mkdir -p certs
+	sudo chown -R $(UID):$(GID) /tmp/certs
+	cp /tmp/certs/cert.pem certs/kulturutveckling.se.crt
+	cp /tmp/certs/key.pem certs/kulturutveckling.se.key
 
 	@echo "Using self-signed certificates will require either the CA cert to be imported system-wide or into apps"
 	@echo "if you don't do this, apps will fail to request data using SSL (https)"
@@ -105,12 +110,12 @@ ssl-certs:
 	@echo "WARNING! For curl to work, you need to provide '--cacert /tmp/certs/ca.pem' switch or SSL requests will fail."
 
 ssl-certs-clean:
-	rm -f certs/infrabas.se.crt certs/infrabas.se.key
+	rm -f certs/kulturutveckling.se.crt certs/kulturutveckling.se.key
 	rm -f /tmp/certs
 
 ssl-certs-show:
 	#openssl x509 -in certs/dina-web.net.crt -text
-	openssl x509 -noout -text -in certs/infrabas.se.crt
+	openssl x509 -noout -text -in certs/kulturutveckling.se.crt
 
 backup:
 	mkdir -p backups
