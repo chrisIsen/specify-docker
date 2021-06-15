@@ -96,13 +96,13 @@ down:
 ssl-certs:
 	@echo "Generating SSL certs using https://hub.docker.com/r/paulczar/omgwtfssl/"
 	docker run -v /tmp/certs:/certs \
-		-e SSL_SUBJECT=kulturutveckling.se \
-		-e SSL_DNS=specify6.kulturutveckling.se,specify7.kulturutveckling.se,reports.kulturutveckling.se,media.kulturutveckling.se \
+		-e SSL_SUBJECT=gnmspecify.se \
+		-e SSL_DNS=specify6.gnmspecify.se,specify7.gnmspecify.se,reports.gnmspecify.se,media.gnmspecify.se \
 	paulczar/omgwtfssl
 	mkdir -p certs
 	sudo chown -R $(UID):$(GID) /tmp/certs
-	cp /tmp/certs/cert.pem certs/kulturutveckling.se.crt
-	cp /tmp/certs/key.pem certs/kulturutveckling.se.key
+	cp /tmp/certs/cert.pem certs/gnmspecify.se.crt
+	cp /tmp/certs/key.pem certs/gnmspecify.se.key
 
 	@echo "Using self-signed certificates will require either the CA cert to be imported system-wide or into apps"
 	@echo "if you don't do this, apps will fail to request data using SSL (https)"
@@ -110,12 +110,12 @@ ssl-certs:
 	@echo "WARNING! For curl to work, you need to provide '--cacert /tmp/certs/ca.pem' switch or SSL requests will fail."
 
 ssl-certs-clean:
-	rm -f certs/kulturutveckling.se.crt certs/kulturutveckling.se.key
+	rm -f certs/gnmspecify.se.crt certs/gnmspecify.se.key
 	rm -f /tmp/certs
 
 ssl-certs-show:
 	#openssl x509 -in certs/dina-web.net.crt -text
-	openssl x509 -noout -text -in certs/kulturutveckling.se.crt
+	openssl x509 -noout -text -in certs/gnmspecify.se.crt
 
 backup:
 	mkdir -p backups

@@ -20,10 +20,10 @@ services:
 #      - 172.17.0.1:53:53/tcp
 #      - 172.17.0.1:53:53/udp
 #    links:
-#      - proxy:specify6.kulturutveckling.se
-#      - proxy:specify7.kulturutveckling.se
-#      - proxy:reports.kulturutveckling.se
-#      - proxy:media.kulturutveckling.se
+#      - proxy:specify6.gnmspecify.se
+#      - proxy:specify7.gnmspecify.se
+#      - proxy:reports.gnmspecify.se
+#      - proxy:media.gnmspecify.se
 
   proxy:
     image: jwilder/nginx-proxy:alpine
@@ -65,25 +65,22 @@ services:
     image: kulturutveckling/specify-assetserver:latest
     container_name: specify-docker_media_1
     environment:
-      - VIRTUAL_HOST=media.kulturutveckling.se
-      - VIRTUAL_PORT=8081
-      - LETSENCRYPT_HOST=media.kulturutveckling.se
-      - LETSENCRYPT_EMAIL=admin@kulturutveckling.se
+      - VIRTUAL_HOST=media.gnmspecify.se
+      - VIRTUAL_PORT=80
+      - LETSENCRYPT_HOST=media.gnmspecify.se
+      - LETSENCRYPT_EMAIL=kulturutveckling.webadmin@vgregion.se
     volumes:
       - ./AttachmentStorage:/root/Specify/AttachmentStorage
       - ./web-asset-server/settings.py:/settings.py
-    ports:
-      - 8089:80
-      - 8091:8081
 
   report:
     image: kulturutveckling/specify-reportserver:v6.2.2
     container_name: specify-docker_report_1
     environment:
-      - VIRTUAL_HOST=reports.kulturutveckling.se
+      - VIRTUAL_HOST=reports.gnmspecify.se
       - VIRTUAL_PORT=8080
-      - LETSENCRYPT_HOST=reports.kulturutveckling.se
-      - LETSENCRYPT_EMAIL=admin@kulturutveckling.se
+      - LETSENCRYPT_HOST=reports.gnmspecify.se
+      - LETSENCRYPT_EMAIL=kulturutveckling.webadmin@vgregion.se
     volumes:
       - data_ui:/opt/Specify
       - ./report-server/m2:/root/.m2
@@ -129,9 +126,9 @@ services:
       - data_webassets:/code/specifyweb/frontend
       - ./six.conf:/etc/nginx/conf.d/default.conf
     environment:
-      - VIRTUAL_HOST=specify6.kulturutveckling.se
-      - LETSENCRYPT_HOST=specify6.kulturutveckling.se
-      - LETSENCRYPT_EMAIL=admin@kulturutveckling.se
+      - VIRTUAL_HOST=specify6.gnmspecify.se
+      - LETSENCRYPT_HOST=specify6.gnmspecify.se
+      - LETSENCRYPT_EMAIL=kulturutveckling.webadmin@vgregion.se
     depends_on:
       - ui
 
@@ -145,10 +142,10 @@ services:
       - data_webassets:/code/specifyweb/frontend
       - ./seven.conf:/etc/nginx/conf.d/default.conf
     environment:
-      - VIRTUAL_HOST=specify7.kulturutveckling.se
+      - VIRTUAL_HOST=specify7.gnmspecify.se
       - VIRTUAL_PORT=80
-      - LETSENCRYPT_HOST=specify7.kulturutveckling.se
-      - LETSENCRYPT_EMAIL=admin@kulturutveckling.se
+      - LETSENCRYPT_HOST=specify7.gnmspecify.se
+      - LETSENCRYPT_EMAIL=kulturutveckling.webadmin@vgregion.se
     depends_on:
       - as
 
