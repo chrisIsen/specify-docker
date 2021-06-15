@@ -18,7 +18,7 @@ MASTER_PASSWORD = 'ben'
 SCHEMA_LANGUAGE = 'en'
 
 # The Specify web attachement server URL.
-WEB_ATTACHMENT_URL = "https://specify7.kulturutveckling.se/media/web_asset_store.xml"
+WEB_ATTACHMENT_URL = "http://specify7.gnmspecify.se/media/web_asset_store.xml"
 
 # The Specify web attachment server key.
 WEB_ATTACHMENT_KEY = 'test_attachment_key'
@@ -52,5 +52,9 @@ STATS_URL = "https://stats.specifycloud.org/capture"
 
 WB_UPLOAD_LOG_DIR = "/tmp/"
 DEPOSITORY_DIR = '/tmp/'
+#WB_UPLOAD_LOG_DIR = "/home/specify/wb_upload_logs"
+#DEPOSITORY_DIR = '/home/specify/specify_depository'
+
 NOTIFICATION_TTL_DAYS = 7
+
 

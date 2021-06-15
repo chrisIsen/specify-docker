@@ -74,7 +74,7 @@ s7-notifications:
 		bash -c "mysql --silent -u root -p$(MYSQL_ROOT_PASSWORD) -D$(MYSQL_DATABASE) < /tmp/s7init.sql"
 
 	@docker exec -it specify-docker_as_1 \
-		bash -c ". ve/bin/activate && make django_migrations"
+		bash -c ". ve/bin/activate && python manage.py migrate notifications"
 
 	@docker exec -it specify-docker_as_1 \
 		bash -c ". ve/bin/activate && python manage.py migrate"
