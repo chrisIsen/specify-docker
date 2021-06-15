@@ -1,5 +1,4 @@
-Technical description
----------------------
+## Technical description
 
 This project holds a dockerized service composition with Specify 6 and 7
 including an asset server and a report server. Here is an overview of
@@ -11,8 +10,7 @@ The system components including relevant versioned images etc are listed
 in the `docker-compose.yml` file and the commands to manage the system
 are listed in the `Makefile`.
 
-Screenshots
------------
+## Screenshots
 
 ![Specify 6 screenshot](s6-screenshot.png)
 
@@ -22,19 +20,17 @@ A webified version of Specify 6 can through NoVNC run in the browser.
 
 The Specify 7 software is a native web application.
 
-Source code and binaries
-------------------------
+## Source code and binaries
 
 Binaries:
 
-<a href="https://hub.docker.com/u/recraft" class="uri">https://hub.docker.com/u/recraft</a>
+<https://hub.docker.com/u/kulturutveckling>
 
 Source code:
 
-<a href="https://github.com/recraft-ou/specify-docker" class="uri">https://github.com/recraft-ou/specify-docker</a>
+<https://github.com/chrisIsen/specify-docker>
 
-Resource requirements
----------------------
+## Resource requirements
 
 While minimally requiring the equivalence of a single host cloud server
 with low resources - such as minimally one VPS with 1G RAM, 1 CPU, 25Gb
@@ -50,8 +46,7 @@ environment mentioned above is only 5 USD, the recommended setup is
 available for what is also a relatively reasonable reasonable cost of
 about 40 USD per month.
 
-In-house or cloud server?
--------------------------
+## In-house or cloud server?
 
 Both options are possible. In both cases, when running services in a
 cloud provided by an IaaS provider or locally on your own hardware and
@@ -66,9 +61,9 @@ cloud you may need to bootstrap a cluster of docker nodes across a set
 of service providers (using your own hardware and/or a set of cloud IaaS
 providers). This can be automated, for example using the
 `docker-machine` - a tool which can be installed from
-<a href="https://github.com/docker/machine/releases" class="uri">https://github.com/docker/machine/releases</a>
-and be used to remotely control Docker machines and swarms or clusters
-of nodes running Docker containers.
+<https://github.com/docker/machine/releases> and be used to remotely
+control Docker machines and swarms or clusters of nodes running Docker
+containers.
 
 In this case, since the dockerized Specify installation runs nicely with
 all services running on a single VPS, there is in most cases probably no
@@ -107,11 +102,9 @@ This option offers the following characteristics:
 -   Enjoy existing support services, issue ticks and get help etc
 
 For Swedish authorities the SUNET Cloud provides a good national option,
-branded under the name SafeSpring:
-<a href="https://www.safespring.com/" class="uri">https://www.safespring.com/</a>
+branded under the name SafeSpring: <https://www.safespring.com/>
 
-Using Digital Ocean
-===================
+# Using Digital Ocean
 
 Here we illustrate steps needed to deploy Specify with a cloud setup
 where we initially [use Docker Machine to provision a cluster node at
@@ -124,7 +117,6 @@ Digital Ocean. This tool allows for enumerating valid values for
 available images and regions.
 
 ``` bash
-
 sudo apt install snapd
 sudo snap install doctl --classic
 
@@ -148,7 +140,7 @@ and image names.
 
 ``` bash
 eval $(ssh-agent)
-ssh-add ~/rekonstrukt/recraft-do
+ssh-add ~/kulturutveckling-do
 
 export DIGITALOCEAN_ACCESS_TOKEN="your_do_access_token_here"
 export DIGITALOCEAN_SSH_KEY_FINGERPRINT="your_ssh_key_fingerprint_here:14:29:8a:13:63:20"
@@ -156,7 +148,7 @@ export DIGITALOCEAN_IMAGE="ubuntu-18-04-x64"
 export DIGITALOCEAN_REGION="ams3"
 
 # provision a node
-docker-machine --debug create recraft \
+docker-machine --debug create kulturutveckling \
   --driver digitalocean \
   --digitalocean-access-token $DIGITALOCEAN_ACCESS_TOKEN \
   --digitalocean-ssh-key-fingerprint $DIGITALOCEAN_SSH_KEY_FINGERPRINT \
@@ -165,11 +157,10 @@ docker-machine --debug create recraft \
 ```
 
 Once the node has been provisioned, shell access is available through
-`docker-machine ssh recraft` and upgrades can be made through
-`docker-machine upgrade recraft`.
+`docker-machine ssh kulturutveckling` and upgrades can be made through
+`docker-machine upgrade kulturutveckling`.
 
-Using Open Stack at SUNET Cloud (SafeSpring Compute)
-====================================================
+# Using Open Stack at SUNET Cloud (SafeSpring Compute)
 
 We start from scratch by provisioning a server in the Open Stack-based
 SUNET Compute Cloud (SafeSpring).
@@ -181,7 +172,6 @@ When using an OpenStack-based IaaS-provider, we’d use a Python-based
 tool called `openstack` for accessing the OpenStack APIs from the CLI:
 
 ``` bash
-
 # install python openstackclient
 
 apt install python-openstackclient
@@ -214,23 +204,21 @@ TCP 2377 and TCP 2376 to the default security group in OpenStack. Then
 you can proceed to create one or more nodes:
 
 ``` bash
-
 docker-machine --debug create \
   --openstack-ssh-user "ubuntu" \
   --openstack-image-name "ubuntu-18.04 [20180517]" \
   --openstack-flavor-name "b.2xlarge" \
-  -d "openstack" recraft-specify
+  -d "openstack" kulturutveckling-specify
 ```
 
 For more information on how to provision the swarm, please see
-<a href="https://docs.docker.com/engine/swarm/swarm-tutorial/create-swarm/" class="uri">https://docs.docker.com/engine/swarm/swarm-tutorial/create-swarm/</a>.
+<https://docs.docker.com/engine/swarm/swarm-tutorial/create-swarm/>.
 
 Once the node(s) has been provisioned, shell access is available through
-`docker-machine ssh recraft-specify` and upgrades can be made through
-`docker-machine upgrade recraft-specify`.
+`docker-machine ssh kulturutveckling-specify` and upgrades can be made
+through `docker-machine upgrade kulturutveckling-specify`.
 
-Steps to deploy Specify
-=======================
+# Steps to deploy Specify
 
 Now that we have a server properly prepared we need to deploy the
 Specify system.
@@ -249,7 +237,7 @@ More details now follow on those steps.
 
 ### Login to host
 
-    docker-machine ssh recraft
+    docker-machine ssh kulturutveckling
     apt install make unzip
     curl -L "https://github.com/docker/compose/releases/download/1.23.1/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
     chmod +x /usr/local/bin/docker-compose
@@ -268,11 +256,12 @@ The `dnsmasq` component used on the development server doesn’t need to
 run in production. Instead, to set up DNS, go to Loopia or equiv
 registrar.
 
-Here we assume using the domain name `recraft.me` so add
-“specify.recraft.me” as a subdomain with a DNS A entry pointing to the
-public ip that you get from the `docker-machine ip recraft` command. You
-also need to add A entires (or CNAME entries) for the four subdomains
-`media, reports, specify6, specify7` pointing to the same public IP.
+Here we assume using the domain name `gnmspecify.se` so add
+“specify.gnmspecify.se” as a subdomain with a DNS A entry pointing to
+the public ip that you get from the `docker-machine ip kulturutveckling`
+command. You also need to add A entires (or CNAME entries) for the four
+subdomains `media, reports, specify6, specify7` pointing to the same
+public IP.
 
 An TLS/SSL cert needs to be present in the production environment, for
 being able to use https. The `docker-compose.yml` file therefore needs a
@@ -304,12 +293,12 @@ settings are in the README.md file. Assuming you want to use
 edits:
 
     # configure Specify settings for example with regards to domain names
-    sed -i "s/recraft\.me/infrabas\.se/g" specify_settings.py
-    sed -i "s/recraft\.me/infrabas\.se/g" user.properties
-    sed -i "s/recraft\.me/infrabas\.se/g" web-asset-server/settings.py
-    sed -i "s/recraft\.me/infrabas\.se/g" docker-compose.yml
+    sed -i "s/gnmspecify\.me/infrabas\.se/g" specify_settings.py
+    sed -i "s/gnmspecify\.me/infrabas\.se/g" user.properties
+    sed -i "s/gnmspecify\.me/infrabas\.se/g" web-asset-server/settings.py
+    sed -i "s/gnmspecify\.me/infrabas\.se/g" docker-compose.yml
 
-Also edit the LETSENCRYPT\_EMAIL values in the `docker-compose.yml`.
+Also edit the LETSENCRYPT_EMAIL values in the `docker-compose.yml`.
 
 Then follow the instructions in [README.md](README.md) for first time
 use before logging in to Specify 7.
@@ -354,11 +343,9 @@ Also verify that the Makefile restore target works.
 To load the system with existing Specify database dumps including media
 assets, see the Makefile for some examples.
 
-FAQ
-===
+# FAQ
 
-How do I backup the server?
----------------------------
+## How do I backup the server?
 
 The back and restore targets in the `Makefile` which are scheduled on
 using `crontab` sets up backups of the application and its data. This is
@@ -377,8 +364,7 @@ ways to do snapshots, exactly how to use this can vary between cloud
 providers (Open Stack-based infrastructures may have one way of doing it
 while other IaaS-providers offer similar but other ways / commands).
 
-Where are the logs?
--------------------
+## Where are the logs?
 
 There are server logs at various levels and places such as `/var/log`.
 
@@ -388,8 +374,7 @@ At the application level there are logs also at different places:
 -   Server-side: Logs from the different application components (use
     `docker-compose logs [servicename]`)
 
-Is there a difference between run-time and build-time upgrades of the application
----------------------------------------------------------------------------------
+## Is there a difference between run-time and build-time upgrades of the application
 
 Build-time updgrades of Specify Software components can be made by
 editing Makefiles and rebuilding with `make build`. These can be pushed
@@ -402,8 +387,7 @@ Specify 6. The upgrade program will then download and install the
 relevant updates, perform schema migrations etc within the running
 container.
 
-How is it possible to change Specify 7 configuations?
------------------------------------------------------
+## How is it possible to change Specify 7 configruations?
 
 In the `docker-compose.yml` file so called `volumes:` provide a way to
 map files from the host into the container, such as
@@ -412,8 +396,7 @@ on the host could be named `./specify_settings.py` which then gets
 mapped to and mounted into the container at a location such as
 `/code/specifyweb/settings/specify_settings.py`.
 
-How can I get a prompt inside one of the running containers?
-------------------------------------------------------------
+## How can I get a prompt inside one of the running containers?
 
 This depends a little on what kind of shells are running in a container,
 often `bash` is available, sometimes you need to use `ash`, and
@@ -425,8 +408,7 @@ generally `sh` can be used:
     # service based on minimal linux alpine base, uses "ash" instead of "bash"
     docker-compose exec proxy ash
 
-How do I connect to the database using MySQL Workbench?
--------------------------------------------------------
+## How do I connect to the database using MySQL Workbench?
 
 Since the services in the application composition runs in their own SDN
 you need to do two things:
@@ -440,30 +422,27 @@ you need to do two things:
 You can the connect a locally running MySQL Workbench to the database
 using `localhost:3306`.
 
-What does the proxy do?
------------------------
+## What does the proxy do?
 
 It routes traffic between services in the application composition. It
 helps with mapping a public domain name to the services and along with
 `letsencrypt` it provides TLS/SSL.
 
-How do I manage users in Specify 7?
------------------------------------
+## How do I manage users in Specify 7?
 
 Documentation is available here:
 
--   <a href="https://www.sustain.specifysoftware.org/support/7-documentation/" class="uri">https://www.sustain.specifysoftware.org/support/7-documentation/</a>
--   <a href="https://www.sustain.specifysoftware.org/support/video-snippets/" class="uri">https://www.sustain.specifysoftware.org/support/video-snippets/</a>
--   <a href="https://www.sustain.specifysoftware.org/support/services-2/" class="uri">https://www.sustain.specifysoftware.org/support/services-2/</a>
+-   <https://www.sustain.specifysoftware.org/support/7-documentation/>
+-   <https://www.sustain.specifysoftware.org/support/video-snippets/>
+-   <https://www.sustain.specifysoftware.org/support/services-2/>
 
 If not covered in there, it is possible to check the open issues related
 to, say user management in Specify 7, and to open an issue here to ask
 the maintainers about specific new issues or errors:
 
--   <a href="https://github.com/specify/specify7/issues?utf8=%E2%9C%93&amp;q=is%3Aissue+is%3Aopen+user+admin" class="uri">https://github.com/specify/specify7/issues?utf8=%E2%9C%93&amp;q=is%3Aissue+is%3Aopen+user+admin</a>
+-   <https://github.com/specify/specify7/issues?utf8=%E2%9C%93&q=is%3Aissue+is%3Aopen+user+admin>
 
-Why are there references to ‘recraft’?
---------------------------------------
+## Why are there references to ‘kulturutveckling’?
 
 Such references can be found in these files:
 
@@ -478,16 +457,15 @@ provided officially by Specify then the slugs would read something like
 dockerized setup of the Specify Software components, then ideally they’d
 provide a slug like that.
 
-Until then these images are served up under an account named `recraft`
-from Docker Hub and are published here:
+Until then these images are served up under an account named
+`kulturutveckling` from Docker Hub and are published here:
 
--   <a href="https://hub.docker.com/u/recraft" class="uri">https://hub.docker.com/u/recraft</a>
+-   <https://hub.docker.com/u/kulturutveckling>
 
 It is also about deployment (sub)domains - and the deloyment guide
 writes about how to switch from one to another.
 
-How are certs handled?
-----------------------
+## How are certs handled?
 
 [`letsencrypt-nginx-proxy-companion`](https://github.com/JrCs/docker-letsencrypt-nginx-proxy-companion)
 is a lightweight companion container for nginx-proxy. It handles the
@@ -496,19 +474,17 @@ proxied Docker containers. This means that:
 
 -   you don’t need to buy certs; free certs are issued by Let’s Encrypt
 -   renewal is automatic
--   in case of issues, the DEFAULT\_EMAIL environment variable is used
-    to reach out to the administrator
+-   in case of issues, the DEFAULT_EMAIL environment variable is used to
+    reach out to the administrator
 
-How do I renew SSL certificates?
---------------------------------
+## How do I renew SSL certificates?
 
 Is is automatic. Updates can be forced and status can be checked with:
 
     docker-compose exec letsencrypt ./cert_status
     docker-compose exec letsencrypt ./force_renew
 
-How to enter the `letsencrypt` container
-----------------------------------------
+## How to enter the `letsencrypt` container
 
 This is normally not needed, but can be achieved by:
 
@@ -518,8 +494,7 @@ This is normally not needed, but can be achieved by:
     # or (not as convenient) using docker [fully-qualified-name-of-container] [command]
     docker exec -it specify-docker_letsencrypt_1 bash
 
-How many VMs are there?
------------------------
+## How many VMs are there?
 
 Docker runs `cgroups` isolated processes ie no VMs are running, just
 processes grouped together which gives minimal overhead. You list the
