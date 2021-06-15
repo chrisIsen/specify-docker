@@ -63,6 +63,9 @@ get-s6-login:
 		sh -c "mysql --silent -u root -p$(MYSQL_ROOT_PASSWORD) -D$(MYSQL_DATABASE) \
 		-e 'select name, password from specifyuser where SpecifyUserID = 1;'"
 
+show-s6-log:
+	docker-compose exec ui tail -f /root/Specify/specify.log
+
 set-s6-passwd:
 	docker exec specify-docker_ui_1 \
 		x11vnc -storepasswd $(NOVNCPASS) ~/.vnc/passwd
