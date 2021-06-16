@@ -1,6 +1,6 @@
 # Dockerized Specify
 
-[![AGPLv3 License](http://img.shields.io/badge/license-AGPLv3-blue.svg)](https://github.com/recraft-ou/specify-docker/blob/master/LICENSE)
+[![AGPLv3 License](http://img.shields.io/badge/license-AGPLv3-blue.svg)](https://github.com/chrisIsen/specify-docker/blob/master/LICENSE)
 
 This repo contains materials to build a system with Specify 6 and 7 using Docker. The system allows running Specify 6 and Specify 7 in parallell with both being accessed through a web browser. Example scenarios where this project could be useful:
 
@@ -20,7 +20,7 @@ Having a local Java install is optional because Specify 6 has been webified usin
 
 The services are secured with [SSL](https://en.wikipedia.org/wiki/Secure_Sockets_Layer) which means a digital certificate is needed - preferrably a [wildcard certificate](https://en.wikipedia.org/wiki/Wildcard_certificate). 
 
-If you are using SSL certs that you have acquired commercially and those are signed by a CA, put your files, ie `wildcardcert.crt` (here we use `recraft.me.crt`) and `wildcardcert.key` (here we use `recraft.me.key`) in the 'certs' -directory.
+If you are using SSL certs that you have acquired commercially and those are signed by a CA, put your files, ie `wildcardcert.crt` (here we use `gnmspecify.se.crt`) and `wildcardcert.key` (here we use `gnmspecify.se.key`) in the 'certs' -directory.
 
 You can also choose to use a free self-signed digital certificate. For setting up SSL using a self-signed digital certificate, see Usage section below.
 
@@ -44,10 +44,10 @@ The `docker-compose.yml` file defines the various components of the system. Firs
 
 On success, services will be available at:
 
-		https://specify7.recraft.me
-		https://specify6.recraft.me
-		https://media.recraft.me
-		https://reports.recraft.me
+		https://specify7.gnmspecify.se
+		https://specify6.gnmspecify.se
+		https://media.gnmspecify.se
+		https://reports.gnmspecify.se
 
 If running for the first time, the database will be loaded with data from the data.sql file (which the Makefile init target automatically downloads from SRC_DATA which is a demo dataset from Kansas available from GitHub, see the Makefile for details).
 
@@ -55,7 +55,7 @@ The db dump takes a while to load, so some patience is needed. The initial start
 
 ## Certificates and setting up SSL
 
-If you are using SSL certs that you have acquired commercially and those are signed by a CA, put your files, ie shared.crt (recraft.me.crt) and shared.key (recraft.me.key) in the 'certs' -directory.
+If you are using SSL certs that you have acquired commercially and those are signed by a CA, put your files, ie shared.crt (gnmspecify.se.crt) and shared.key (gnmspecify.se.key) in the 'certs' -directory.
 
 You can also generate self-signed certs. Detailed steps:
 
@@ -110,7 +110,7 @@ Before the first login to Specify 7, first make sure the Specify 6 has updated t
 
 Then run "make s7-notifications" which adds a table to the database schema which is needed specifically by Specify 7 (but not by Specify 6).
 
-Finally - after those steps - use the credentials above to login at <https://specify7.recraft.me> (normally `demouser/demouser`)
+Finally - after those steps - use the credentials above to login at <https://specify7.gnmspecify.se> (normally `demouser/demouser`)
 
 ## Settings files for Specify 6 and Specify 7
 
@@ -123,7 +123,7 @@ The `user.properties` needs to be updated with minimal settings that can be used
 It seems like these entries should be valid, as default settings provided in the `user.properties` file in this repo:
 
 		USE_GLOBAL_PREFS=true
-		attachment.url=http\://media.recraft.me/web_asset_store.xml
+		attachment.url=http\://media.gnmspecify.se/web_asset_store.xml
 		attachment.use_path=false
 		attachment.key=test_attachment_key
 		attachment.path=
@@ -144,7 +144,7 @@ Specify 7 stores settings in a file called `specify_settings.py`, such as:
 		MASTER_NAME = 'ben'
 		MASTER_PASSWORD = 'ben'
 		SCHEMA_LANGUAGE = 'en'
-		WEB_ATTACHMENT_URL = "https://media.recraft.me/web_asset_store.xml"
+		WEB_ATTACHMENT_URL = "https://media.gnmspecify.se/web_asset_store.xml"
 		WEB_ATTACHMENT_KEY = 'test_attachment_key'
 		WEB_ATTACHMENT_COLLECTION = None
 		WEB_ATTACHMENT_REQUIRES_KEY_FOR_GET = False

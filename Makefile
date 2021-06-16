@@ -47,7 +47,10 @@ build:
 
 up:
 	@echo "Launching services"
-	docker-compose up -d 
+	docker-compose up -d
+
+ssl-certs-init:
+	docker-compose exec proxy sh -c "cp /tmp/certs/* /etc/nginx/certs/"
 
 get-db-shell:
 	@docker exec -it specify-docker_db_1 \
@@ -60,6 +63,9 @@ get-s6-login:
 		sh -c "mysql --silent -u root -p$(MYSQL_ROOT_PASSWORD) -D$(MYSQL_DATABASE) \
 		-e 'select name, password from specifyuser where SpecifyUserID = 1;'"
 
+show-s6-log:
+	docker-compose exec ui tail -f /root/Specify/specify.log
+
 set-s6-passwd:
 	docker exec specify-docker_ui_1 \
 		x11vnc -storepasswd $(NOVNCPASS) ~/.vnc/passwd
@@ -71,7 +77,7 @@ s7-notifications:
 		bash -c "mysql --silent -u root -p$(MYSQL_ROOT_PASSWORD) -D$(MYSQL_DATABASE) < /tmp/s7init.sql"
 
 	@docker exec -it specify-docker_as_1 \
-		bash -c ". ve/bin/activate && make django_migrations"
+		bash -c ". ve/bin/activate && python manage.py migrate notifications"
 
 	@docker exec -it specify-docker_as_1 \
 		bash -c ". ve/bin/activate && python manage.py migrate"
@@ -93,11 +99,13 @@ down:
 ssl-certs:
 	@echo "Generating SSL certs using https://hub.docker.com/r/paulczar/omgwtfssl/"
 	docker run -v /tmp/certs:/certs \
-		-e SSL_SUBJECT=infrabas.se \
-		-e SSL_DNS=specify6.infrabas.se,specify7.infrabas.se,reports.infrabas.se,media.infrabas.se \
+		-e SSL_SUBJECT=gnmspecify.se \
+		-e SSL_DNS=specify6.gnmspecify.se,specify7.gnmspecify.se,reports.gnmspecify.se,media.gnmspecify.se \
 	paulczar/omgwtfssl
-	cp /tmp/certs/cert.pem certs/infrabas.se.crt
-	cp /tmp/certs/key.pem certs/infrabas.se.key
+	mkdir -p certs
+	sudo chown -R $(UID):$(GID) /tmp/certs
+	cp /tmp/certs/cert.pem certs/gnmspecify.se.crt
+	cp /tmp/certs/key.pem certs/gnmspecify.se.key
 
 	@echo "Using self-signed certificates will require either the CA cert to be imported system-wide or into apps"
 	@echo "if you don't do this, apps will fail to request data using SSL (https)"
@@ -105,12 +113,12 @@ ssl-certs:
 	@echo "WARNING! For curl to work, you need to provide '--cacert /tmp/certs/ca.pem' switch or SSL requests will fail."
 
 ssl-certs-clean:
-	rm -f certs/infrabas.se.crt certs/infrabas.se.key
+	rm -f certs/gnmspecify.se.crt certs/gnmspecify.se.key
 	rm -f /tmp/certs
 
 ssl-certs-show:
 	#openssl x509 -in certs/dina-web.net.crt -text
-	openssl x509 -noout -text -in certs/infrabas.se.crt
+	openssl x509 -noout -text -in certs/gnmspecify.se.crt
 
 backup:
 	mkdir -p backups

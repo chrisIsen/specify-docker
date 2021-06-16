@@ -32,12 +32,11 @@ The Specify 7 software is a native web application.
 
 Binaries:
 
-https://hub.docker.com/u/recraft
+https://hub.docker.com/u/kulturutveckling
 
 Source code:
 
-https://github.com/recraft-ou/specify-docker
-
+https://github.com/chrisIsen/specify-docker
 
 ## Resource requirements
 
@@ -107,7 +106,7 @@ To automate provisioning of a cluster node using `docker-machine`, we need to sp
 
 ```bash
 eval $(ssh-agent)
-ssh-add ~/rekonstrukt/recraft-do
+ssh-add ~/kulturutveckling-do
 
 export DIGITALOCEAN_ACCESS_TOKEN="your_do_access_token_here"
 export DIGITALOCEAN_SSH_KEY_FINGERPRINT="your_ssh_key_fingerprint_here:14:29:8a:13:63:20"
@@ -115,7 +114,7 @@ export DIGITALOCEAN_IMAGE="ubuntu-18-04-x64"
 export DIGITALOCEAN_REGION="ams3"
 
 # provision a node
-docker-machine --debug create recraft \
+docker-machine --debug create kulturutveckling \
   --driver digitalocean \
   --digitalocean-access-token $DIGITALOCEAN_ACCESS_TOKEN \
   --digitalocean-ssh-key-fingerprint $DIGITALOCEAN_SSH_KEY_FINGERPRINT \
@@ -124,7 +123,7 @@ docker-machine --debug create recraft \
 
 ```
 
-Once the node has been provisioned, shell access is available through `docker-machine ssh recraft` and upgrades can be made through `docker-machine upgrade recraft`.
+Once the node has been provisioned, shell access is available through `docker-machine ssh kulturutveckling` and upgrades can be made through `docker-machine upgrade kulturutveckling`.
 
 # Using Open Stack at SUNET Cloud (SafeSpring Compute)
 
@@ -171,13 +170,13 @@ docker-machine --debug create \
   --openstack-ssh-user "ubuntu" \
   --openstack-image-name "ubuntu-18.04 [20180517]" \
   --openstack-flavor-name "b.2xlarge" \
-  -d "openstack" recraft-specify
+  -d "openstack" kulturutveckling-specify
 
 ```
 
 For more information on how to provision the swarm, please see https://docs.docker.com/engine/swarm/swarm-tutorial/create-swarm/.
 
-Once the node(s) has been provisioned, shell access is available through `docker-machine ssh recraft-specify` and upgrades can be made through `docker-machine upgrade recraft-specify`.
+Once the node(s) has been provisioned, shell access is available through `docker-machine ssh kulturutveckling-specify` and upgrades can be made through `docker-machine upgrade kulturutveckling-specify`.
 
 
 # Steps to deploy Specify 
@@ -197,7 +196,7 @@ More details now follow on those steps.
 
 ### Login to host 
 
-    docker-machine ssh recraft
+    docker-machine ssh kulturutveckling
     apt install make unzip
     curl -L "https://github.com/docker/compose/releases/download/1.23.1/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
     chmod +x /usr/local/bin/docker-compose
@@ -215,7 +214,7 @@ More details now follow on those steps.
 
 The `dnsmasq` component used on the development server doesn't need to run in production. Instead, to set up DNS, go to Loopia or equiv registrar. 
 
-Here we assume using the domain name `recraft.me` so add "specify.recraft.me" as a subdomain with a DNS A entry pointing to the public ip that you get from the `docker-machine ip recraft` command. You also need to add A entires (or CNAME entries) for the four subdomains `media, reports, specify6, specify7` pointing to the same public IP. 
+Here we assume using the domain name `gnmspecify.se` so add "specify.gnmspecify.se" as a subdomain with a DNS A entry pointing to the public ip that you get from the `docker-machine ip kulturutveckling` command. You also need to add A entires (or CNAME entries) for the four subdomains `media, reports, specify6, specify7` pointing to the same public IP. 
 
 An TLS/SSL cert needs to be present in the production environment, for being able to use https. The `docker-compose.yml` file therefore needs a bind mount for the proxy component and the certs need to be present in the host's `certs` directory. 
 
@@ -238,10 +237,10 @@ Then change the credentials (held in the `.env`file which gets referenced in the
 There are a few config files to go through. Some detail on configuration settings are in the README.md file. Assuming you want to use "infrabas.se" as the top level domain name, you'd have to do these edits:
 
     # configure Specify settings for example with regards to domain names
-    sed -i "s/recraft\.me/infrabas\.se/g" specify_settings.py
-    sed -i "s/recraft\.me/infrabas\.se/g" user.properties
-    sed -i "s/recraft\.me/infrabas\.se/g" web-asset-server/settings.py
-    sed -i "s/recraft\.me/infrabas\.se/g" docker-compose.yml
+    sed -i "s/gnmspecify\.me/infrabas\.se/g" specify_settings.py
+    sed -i "s/gnmspecify\.me/infrabas\.se/g" user.properties
+    sed -i "s/gnmspecify\.me/infrabas\.se/g" web-asset-server/settings.py
+    sed -i "s/gnmspecify\.me/infrabas\.se/g" docker-compose.yml
 
 Also edit the LETSENCRYPT_EMAIL values in the `docker-compose.yml`.
 
@@ -354,7 +353,7 @@ If not covered in there, it is possible to check the open issues related to, say
 - https://github.com/specify/specify7/issues?utf8=%E2%9C%93&q=is%3Aissue+is%3Aopen+user+admin
 
 
-## Why are there references to 'recraft'?
+## Why are there references to 'kulturutveckling'?
 
 Such references can be found in these files:
 
@@ -364,9 +363,9 @@ Such references can be found in these files:
 
 Mostly this is about "slugs" ie public identifiers to Docker Images that can be pulled globally from the Docker Hub. If these images had been provided officially by Specify then the slugs would read something like "specify/specify-server:v7" etc. If Specify Software were to accept this dockerized setup of the Specify Software components, then ideally they'd provide a slug like that. 
 
-Until then these images are served up under an account named `recraft` from Docker Hub and are published here:
+Until then these images are served up under an account named `kulturutveckling` from Docker Hub and are published here:
 
-- https://hub.docker.com/u/recraft
+- https://hub.docker.com/u/kulturutveckling
 
 It is also about deployment (sub)domains - and the deloyment guide writes about how to switch from one to another.
 

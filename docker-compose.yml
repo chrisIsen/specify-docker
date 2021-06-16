@@ -20,10 +20,10 @@ services:
 #      - 172.17.0.1:53:53/tcp
 #      - 172.17.0.1:53:53/udp
 #    links:
-#      - proxy:specify6.recraft.me
-#      - proxy:specify7.recraft.me
-#      - proxy:reports.recraft.me
-#      - proxy:media.recraft.me
+#      - proxy:specify6.gnmspecify.se
+#      - proxy:specify7.gnmspecify.se
+#      - proxy:reports.gnmspecify.se
+#      - proxy:media.gnmspecify.se
 
   proxy:
     image: jwilder/nginx-proxy:alpine
@@ -33,9 +33,10 @@ services:
       - 443:443
     volumes:
       - /var/run/docker.sock:/tmp/docker.sock:ro
-      - data_certs:/etc/nginx/certs:ro
+      - data_certs:/etc/nginx/certs
       - data_vhost:/etc/nginx/vhost.d
       - data_html:/usr/share/nginx/html
+      - ./certs:/tmp/certs
     labels:
       - "com.github.jrcs.letsencrypt_nginx_proxy_companion.nginx_proxy"
 
@@ -47,9 +48,6 @@ services:
       - data_certs:/etc/nginx/certs
       - data_vhost:/etc/nginx/vhost.d
       - data_html:/usr/share/nginx/html
-    depends_on:
-      - wssix
-      - proxy  
   
   db:
     image: mysql:5.7
@@ -66,18 +64,12 @@ services:
   media:
     image: kulturutveckling/specify-assetserver:latest
     container_name: specify-docker_media_1
-    environment:
-      - VIRTUAL_HOST=media.gnmspecify.se
-      - VIRTUAL_PORT=80
-      - LETSENCRYPT_HOST=media.gnmspecify.se
-      - LETSENCRYPT_EMAIL=kulturutveckling.webadmin@vgregion.se
     volumes:
       - ./AttachmentStorage:/root/Specify/AttachmentStorage
       - ./web-asset-server/settings.py:/settings.py
 
   report:
     image: kulturutveckling/specify-reportserver:v6.2.2
-#    image: kulturutveckling/specify-reportserver:v6.9.0
     container_name: specify-docker_report_1
     environment:
       - VIRTUAL_HOST=reports.gnmspecify.se
@@ -100,17 +92,21 @@ services:
       - db
       - report
       - media
+    ports:
+      - 8083:8083
+    environment:
+      - TINI_SUBREAPER=TRUE
+
 
   as:
     image: kulturutveckling/specify-server:v7.5.0
-#    image: kulturutveckling/specify-server:latest
     container_name: specify-docker_as_1
     ports:
       - "8080:80"
     volumes:
       - data_ui:/opt/Specify
-      - data_webassets:/code/specifyweb/frontend
-      - ./specify_settings.py:/code/specifyweb/settings/specify_settings.py
+      - data_webassets:/opt/specify7/specifyweb/frontend
+      - ./specify_settings.py:/opt/specify7/specifyweb/settings/specify_settings.py
     depends_on:
       - db
       - report
@@ -142,10 +138,25 @@ services:
       - ./seven.conf:/etc/nginx/conf.d/default.conf
     environment:
       - VIRTUAL_HOST=specify7.gnmspecify.se
+      - VIRTUAL_PORT=80
       - LETSENCRYPT_HOST=specify7.gnmspecify.se
       - LETSENCRYPT_EMAIL=kulturutveckling.webadmin@vgregion.se
     depends_on:
       - as
+
+  wsmedia:
+    image: nginx:alpine
+    init: true
+    volumes:
+      - ./media.conf:/etc/nginx/conf.d/default.conf
+    environment:
+      - VIRTUAL_HOST=media.gnmspecify.se
+      - VIRTUAL_PORT=80
+      - LETSENCRYPT_HOST=media.gnmspecify.se
+      - LETSENCRYPT_EMAIL=kulturutveckling.webadmin@vgregion.se
+    depends_on:
+      - media
+
 
 #networks:
 #  default:
